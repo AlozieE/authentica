@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Authentica.Models
+namespace Authentica_app.Models
 {
     public enum VaultItemType
     {
