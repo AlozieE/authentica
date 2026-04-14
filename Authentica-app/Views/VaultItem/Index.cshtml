@@ -5,7 +5,14 @@
     <div>
         <h2>@ViewBag.ItemType</h2>
     </div>
-    <a asp-controller="Vault" asp-action="Index" class="btn btn-primary">+ Nieuw item</a>
+    @if (ViewBag.VaultId != null)
+    {
+        <a asp-action="Create" asp-route-vaultId="@ViewBag.VaultId" asp-route-type="@ViewBag.ItemType" class="btn btn-primary">+ Nieuw item</a>
+    }
+    else
+    {
+        <a asp-controller="Vault" asp-action="Index" class="btn btn-primary">+ Nieuw item</a>
+    }
 </div>
 
 @if (!Model.Any())

@@ -21,7 +21,11 @@
                             <div class="card-body">
                                 <h5 class="card-title">@vault.Name</h5>
                                 <p class="card-text text-muted"><small>Aangemaakt: @vault.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</small></p>
-                                <p class="card-text text-muted"><small>Klik om items te bekijken</small></p>
+                                <div class="d-flex gap-2 mt-3">
+                                    <a asp-controller="VaultItem" asp-action="Index" asp-route-vaultId="@vault.VaultId" asp-route-type="Password" class="btn btn-sm btn-outline-primary">Wachtwoorden</a>
+                                    <a asp-controller="VaultItem" asp-action="Index" asp-route-vaultId="@vault.VaultId" asp-route-type="CreditCard" class="btn btn-sm btn-outline-primary">Creditcards</a>
+                                    <a asp-controller="VaultItem" asp-action="Index" asp-route-vaultId="@vault.VaultId" asp-route-type="SecureNote" class="btn btn-sm btn-outline-primary">Notities</a>
+                                </div>
                             </div>
                         </a>
                         <div class="card-footer d-flex justify-content-between">
