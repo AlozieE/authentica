@@ -28,6 +28,34 @@ using Authentica_app.Data;
                         .ToListAsync();
                     return View(vaults);
                 }
+                public async Task<IActionResult> Details(int id)
+                {
+                    var userId = _userManager.GetUserId(User);
+
+                    var vault = await _context.Vaults
+                        .FirstOrDefaultAsync(v => v.VaultId == id && v.UserId == userId);
+
+                    if (vault == null)
+                        return NotFound();
+
+                    var passwords = await _context.VaultItems
+                        .Where(i => i.VaultId == id && i.ItemType == VaultItemType.Password)
+                        .ToListAsync();
+
+                    var creditCards = await _context.VaultItems
+                        .Where(i => i.VaultId == id && i.ItemType == VaultItemType.CreditCard)
+                        .ToListAsync();
+
+                    var secureNotes = await _context.VaultItems
+                        .Where(i => i.VaultId == id && i.ItemType == VaultItemType.SecureNote)
+                        .ToListAsync();
+
+                    ViewBag.Passwords = passwords;
+                    ViewBag.CreditCards = creditCards;
+                    ViewBag.SecureNotes = secureNotes;
+
+                    return View(vault);
+                }
                 
                 public IActionResult Create()
                 {

@@ -1,0 +1,51 @@
+@model Authentica_app.Models.Vault
+@{ ViewData["Title"] = @Model.Name; }
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>@Model.Name</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary">← Terug naar vaults</a>
+</div>
+
+<div class="row">
+    <!-- Wachtwoorden -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">🔑 Wachtwoorden</h5>
+                <p class="card-text text-muted">@ViewBag.Passwords.Count item(s)</p>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <a asp-controller="VaultItem" asp-action="Index" asp-route-vaultId="@Model.VaultId" asp-route-type="Password" class="btn btn-sm btn-outline-primary">Bekijken</a>
+                <a asp-controller="VaultItem" asp-action="Create" asp-route-vaultId="@Model.VaultId" asp-route-type="Password" class="btn btn-sm btn-primary">+ Toevoegen</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Creditcards -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">💳 Creditcards</h5>
+                <p class="card-text text-muted">@ViewBag.CreditCards.Count item(s)</p>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <a asp-controller="VaultItem" asp-action="Index" asp-route-vaultId="@Model.VaultId" asp-route-type="CreditCard" class="btn btn-sm btn-outline-primary">Bekijken</a>
+                <a asp-controller="VaultItem" asp-action="Create" asp-route-vaultId="@Model.VaultId" asp-route-type="CreditCard" class="btn btn-sm btn-primary">+ Toevoegen</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notities -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">📝 Notities</h5>
+                <p class="card-text text-muted">@ViewBag.SecureNotes.Count item(s)</p>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <a asp-controller="VaultItem" asp-action="Index" asp-route-vaultId="@Model.VaultId" asp-route-type="SecureNote" class="btn btn-sm btn-outline-primary">Bekijken</a>
+                <a asp-controller="VaultItem" asp-action="Create" asp-route-vaultId="@Model.VaultId" asp-route-type="SecureNote" class="btn btn-sm btn-primary">+ Toevoegen</a>
+            </div>
+        </div>
+    </div>
+</div>
