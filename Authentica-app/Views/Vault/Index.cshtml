@@ -17,15 +17,18 @@
             {
                 <div class="col-md-4 mb-3">
                     <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">@vault.Name</h5>
-                            <p class="card-text text-muted"><small>Created: @vault.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</small></p>
-                        </div>
+                        <a asp-controller="VaultItem" asp-action="Index" asp-route-vaultId="@vault.VaultId" asp-route-type="Password" class="text-decoration-none text-dark">
+                            <div class="card-body">
+                                <h5 class="card-title">@vault.Name</h5>
+                                <p class="card-text text-muted"><small>Aangemaakt: @vault.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</small></p>
+                                <p class="card-text text-muted"><small>Klik om items te bekijken</small></p>
+                            </div>
+                        </a>
                         <div class="card-footer d-flex justify-content-between">
-                            <a asp-action="Edit" asp-route-id="@vault.VaultId" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a asp-action="Edit" asp-route-id="@vault.VaultId" class="btn btn-sm btn-outline-secondary">Bewerken</a>
                             <form asp-action="Delete" asp-route-id="@vault.VaultId" method="post">
                                 @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Weet je het zeker?')">Verwijderen</button>
                             </form>
                         </div>
                     </div>
