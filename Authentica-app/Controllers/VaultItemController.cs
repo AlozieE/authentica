@@ -1,5 +1,6 @@
 using Authentica_app.Data;
 using Authentica_app.Models;
+using Authentica_app.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,13 @@ namespace Authentica_app.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly EncryptionService _encryptionService;
 
-        public VaultItemController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public VaultItemController(ApplicationDbContext context, UserManager<IdentityUser> userManager, EncryptionService encryptionService)
         {
             _context = context;
             _userManager = userManager;
+            _encryptionService = encryptionService;
         }
 
         public async Task<IActionResult> Index(VaultItemType type, int? vaultId = null)
@@ -39,7 +42,7 @@ namespace Authentica_app.Controllers
             ViewBag.VaultId = vaultId;
             return View(items);
         }
-        
+
         public async Task<IActionResult> Create(int vaultId, VaultItemType type)
         {
             var userId = _userManager.GetUserId(User);
@@ -84,13 +87,16 @@ namespace Authentica_app.Controllers
                 return View();
             }
 
+            var jsonData = JsonSerializer.Serialize(data);
+            var (encryptedData, iv) = _encryptionService.Encrypt(jsonData);
+
             var item = new VaultItem
             {
                 Title = title,
                 ItemType = type,
                 VaultId = vaultId,
-                EncryptedData = JsonSerializer.Serialize(data),
-                IV = "placeholder",
+                EncryptedData = encryptedData,
+                IV = iv,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -112,7 +118,8 @@ namespace Authentica_app.Controllers
             if (item == null)
                 return NotFound();
 
-            ViewBag.Data = JsonSerializer.Deserialize<Dictionary<string, string>>(item.EncryptedData);
+            var decryptedData = _encryptionService.Decrypt(item.EncryptedData, item.IV);
+            ViewBag.Data = JsonSerializer.Deserialize<Dictionary<string, string>>(decryptedData);
             ViewBag.ItemType = item.ItemType;
             ViewBag.Vault = item.Vault;
             return View(item);
@@ -138,8 +145,12 @@ namespace Authentica_app.Controllers
                     data[key] = form[key]!;
             }
 
+            var jsonData = JsonSerializer.Serialize(data);
+            var (encryptedData, iv) = _encryptionService.Encrypt(jsonData);
+
             item.Title = form["Title"].ToString();
-            item.EncryptedData = JsonSerializer.Serialize(data);
+            item.EncryptedData = encryptedData;
+            item.IV = iv;
             item.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

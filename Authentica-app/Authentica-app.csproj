@@ -5,6 +5,8 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>aspnet-Authentica_app-cf7cabaa-93cc-4aff-8a14-ff894951a458</UserSecretsId>
+        <TieredCompilation>true</TieredCompilation>
+        <TieredPGO>false</TieredPGO>
         <RootNamespace>Authentica_app</RootNamespace>
     </PropertyGroup>
 

@@ -14,7 +14,7 @@ namespace Authentica_app.Data
                     
         public DbSet<Vault> Vaults { get; set; }
         public DbSet<VaultItem> VaultItems { get; set; }
-                            
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
