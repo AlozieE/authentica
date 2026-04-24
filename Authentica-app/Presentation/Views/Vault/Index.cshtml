@@ -1,0 +1,39 @@
+@model IEnumerable<Authentica_app.BLL.Models.Vault>
+@{ ViewData["Title"] = "My Vaults"; }
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>My Vaults</h2>
+        <a asp-action="Create" class="btn btn-primary">+ New Vault</a>
+    </div>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">You don't have any vaults yet. Create one to get started!</div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var vault in Model)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <a asp-action="Details" asp-route-id="@vault.VaultId" class="text-decoration-none text-dark">
+                            <div class="card-body">
+                                <h5 class="card-title">@vault.Name</h5>
+                                <p class="card-text text-muted"><small>Aangemaakt: @vault.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</small></p>
+                                <p class="card-text text-muted"><small>Klik om items te bekijken</small></p>
+                            </div>
+                        </a>
+                        <div class="card-footer d-flex justify-content-between">
+                            <a asp-action="Edit" asp-route-id="@vault.VaultId" class="btn btn-sm btn-outline-secondary">Bewerken</a>
+                            <form asp-action="Delete" asp-route-id="@vault.VaultId" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Weet je het zeker?')">Verwijderen</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

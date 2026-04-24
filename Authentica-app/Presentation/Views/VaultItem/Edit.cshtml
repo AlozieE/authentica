@@ -1,0 +1,67 @@
+@model Authentica_app.BLL.Models.VaultItem
+@{ ViewData["Title"] = "Bewerken"; }
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>@ViewBag.ItemType bewerken</h2>
+    <a asp-action="Index" asp-route-vaultId="@ViewBag.Vault.VaultId" asp-route-type="@ViewBag.ItemType" class="btn btn-outline-secondary">← Terug</a>
+</div>
+
+<div class="card" style="max-width: 500px;">
+    <div class="card-body">
+        <form asp-action="Edit" asp-route-id="@Model.VaultItemId" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Titel</label>
+                <input name="Title" value="@Model.Title" class="form-control" required />
+            </div>
+
+            @if (ViewBag.ItemType == Authentica_app.BLL.Models.VaultItemType.Password)
+            {
+                <div class="mb-3">
+                    <label class="form-label">Website</label>
+                    <input name="Website" value="@ViewBag.Data?["Website"]" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Gebruikersnaam</label>
+                    <input name="Username" value="@ViewBag.Data?["Username"]" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Wachtwoord</label>
+                    <input name="Password" type="password" value="@ViewBag.Data?["Password"]" class="form-control" />
+                </div>
+            }
+            else if (ViewBag.ItemType == Authentica_app.BLL.Models.VaultItemType.CreditCard)
+            {
+                <div class="mb-3">
+                    <label class="form-label">Kaarthouder</label>
+                    <input name="CardHolder" value="@ViewBag.Data?["CardHolder"]" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Kaartnummer</label>
+                    <input name="CardNumber" value="@ViewBag.Data?["CardNumber"]" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Vervaldatum</label>
+                    <input name="ExpiryDate" value="@ViewBag.Data?["ExpiryDate"]" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">CVC</label>
+                    <input name="CVC" value="@ViewBag.Data?["CVC"]" class="form-control" />
+                </div>
+            }
+            else if (ViewBag.ItemType == Authentica_app.BLL.Models.VaultItemType.SecureNote)
+            {
+                <div class="mb-3">
+                    <label class="form-label">Inhoud</label>
+                    <textarea name="Content" class="form-control" rows="5">@ViewBag.Data?["Content"]</textarea>
+                </div>
+            }
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Opslaan</button>
+                <a asp-action="Index" asp-route-vaultId="@ViewBag.Vault.VaultId" asp-route-type="@ViewBag.ItemType" class="btn btn-outline-secondary">Annuleren</a>
+            </div>
+        </form>
+    </div>
+</div>

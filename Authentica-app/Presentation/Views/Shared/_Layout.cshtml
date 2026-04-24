@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Authentica</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f6fa;
+            color: #1a1a2e;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            min-height: 100vh;
+            background-color: #ffffff;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 16px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 32px;
+            padding: 8px;
+        }
+
+        .logo-placeholder {
+            width: 36px;
+            height: 36px;
+            background-color: #4f46e5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .sidebar-logo span {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .nav-section-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #9ca3af;
+            letter-spacing: 0.08em;
+            margin: 16px 8px 6px;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 2px;
+            transition: background 0.15s;
+        }
+
+        .sidebar-nav a:hover {
+            background-color: #f3f4f6;
+            color: #1a1a2e;
+        }
+
+        .sidebar-nav a.active {
+            background-color: #ede9fe;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+
+        .sidebar-nav .sub-link {
+            padding-left: 24px;
+            font-size: 13px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 16px;
+        }
+
+        .sidebar-bottom a {
+            display: block;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .sidebar-bottom a:hover {
+            background-color: #f3f4f6;
+            color: #1a1a2e;
+        }
+        
+        .main-content {
+            margin-left: 220px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 14px 32px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .top-bar .user-email {
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .top-bar .btn-logout {
+            font-size: 13px;
+            color: #ef4444;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #ef4444;
+            transition: all 0.15s;
+        }
+
+        .top-bar .btn-logout:hover {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .page-body {
+            padding: 32px;
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img src="~/images/authentica.png" alt="Authentica" style="width: 150px; height: 150px; object-fit: contain;" />
+        </div>
+
+        <nav class="sidebar-nav">
+            <a asp-controller="Home" asp-action="Index">Dashboard</a>
+
+            <div class="nav-section-label">Vault</div>
+            <a asp-controller="Vault" asp-action="Index">All Vaults</a>
+            <a asp-controller="VaultItem" asp-action="Index" asp-route-type="Password" class="sub-link">Passwords</a>
+            <a asp-controller="VaultItem" asp-action="Index" asp-route-type="CreditCard" class="sub-link">Credit Cards</a>
+            <a asp-controller="VaultItem" asp-action="Index" asp-route-type="SecureNote" class="sub-link">Secure Notes</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
+            <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Change Password</a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="top-bar">
+            @if (User.Identity!.IsAuthenticated)
+            {
+                <span class="user-email">@User.Identity.Name</span>
+                <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                    <button type="submit" class="btn-logout">Logout</button>
+                </form>
+            }
+            else
+            {
+                <a asp-area="Identity" asp-page="/Account/Login">Login</a>
+                <a asp-area="Identity" asp-page="/Account/Register">Register</a>
+            }
+        </div>
+
+        <div class="page-body">
+            @RenderBody()
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
