@@ -20,7 +20,7 @@ public class VaultItemServiceTests
         return new EncryptionService(config);
     }
 
-    // Each test gets its own isolated in-memory database
+
     private static ApplicationDbContext CreateDbContext()
     {
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -29,9 +29,7 @@ public class VaultItemServiceTests
         return new ApplicationDbContext(options);
     }
 
-    // ──────────────────────────────────────────────
-    // FR9 – EncryptionService tests
-    // ──────────────────────────────────────────────
+
 
     [TestMethod]
     public void Encrypt_ReturnsEncryptedData_DifferentFromInput()
@@ -66,9 +64,6 @@ public class VaultItemServiceTests
         Assert.AreNotEqual(iv1, iv2);
     }
 
-    // ──────────────────────────────────────────────
-    // FR8 – VaultItem CRUD tests
-    // ──────────────────────────────────────────────
 
     [TestMethod]
     public async Task CreateItem_SavesItemToDatabase()
