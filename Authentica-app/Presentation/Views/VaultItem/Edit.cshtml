@@ -28,7 +28,16 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Wachtwoord</label>
-                    <input name="Password" type="password" value="@ViewBag.Data?["Password"]" class="form-control" />
+                    <div class="input-group mb-2">
+                        <input id="passwordField" name="Password" type="password" value="@ViewBag.Data?["Password"]" class="form-control" />
+                        <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility()">
+                            <span id="eyeIcon">&#128065;</span>
+                        </button>
+                    </div>
+                    <div class="input-group">
+                        <input id="passwordLength" type="number" class="form-control" value="16" min="8" max="64" style="max-width: 90px;" />
+                        <button type="button" class="btn btn-outline-primary" onclick="generatePassword()">Genereer</button>
+                    </div>
                 </div>
             }
             else if (ViewBag.ItemType == Authentica_app.BLL.Models.VaultItemType.CreditCard)
@@ -65,3 +74,36 @@
         </form>
     </div>
 </div>
+
+@if (ViewBag.ItemType == Authentica_app.BLL.Models.VaultItemType.Password)
+{
+    <script>
+        function generatePassword() {
+            var length = parseInt(document.getElementById('passwordLength').value);
+            if (length < 8) {
+                alert('Wachtwoordlengte moet minimaal 8 tekens zijn.');
+                return;
+            }
+            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@@#$%^&*()_+-=[]{}|;:,.<>?';
+            var password = '';
+            for (var i = 0; i < length; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            var field = document.getElementById('passwordField');
+            field.value = password;
+            field.type = 'text';
+            document.getElementById('eyeIcon').textContent = '🙈';
+        }
+
+        function togglePasswordVisibility() {
+            var field = document.getElementById('passwordField');
+            if (field.type === 'password') {
+                field.type = 'text';
+                document.getElementById('eyeIcon').innerHTML = '&#128065;&#65038;';
+            } else {
+                field.type = 'password';
+                document.getElementById('eyeIcon').innerHTML = '&#128065;';
+            }
+        }
+    </script>
+}
