@@ -158,6 +158,57 @@
             padding: 32px;
             flex: 1;
         }
+
+        .session-warning-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .session-warning-overlay.show {
+            display: flex;
+        }
+
+        .session-warning-box {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .session-warning-box h3 {
+            color: #1a1a2e;
+            margin-bottom: 12px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .session-warning-box p {
+            color: #4b5563;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .session-warning-box button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .session-warning-box button:hover {
+            background: #4338ca;
+        }
     </style>
 </head>
 <body>
@@ -189,7 +240,7 @@
             @if (User.Identity!.IsAuthenticated)
             {
                 <span class="user-email">@User.Identity.Name</span>
-                <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
                     <button type="submit" class="btn-logout">Logout</button>
                 </form>
             }
@@ -205,8 +256,55 @@
         </div>
     </div>
 
+    @if (User.Identity!.IsAuthenticated)
+    {
+        <div id="sessionWarningOverlay" class="session-warning-overlay">
+            <div class="session-warning-box">
+                <h3>Sessie verloopt binnenkort</h3>
+                <p>Je wordt over 2 minuten automatisch uitgelogd</p>
+                <button id="sessionStayBtn">Ingelogd blijven</button>
+            </div>
+        </div>
+    }
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    @if (User.Identity!.IsAuthenticated)
+    {
+        <script>
+            (function () {
+                var WARNING_MS = 13 * 60 * 1000;
+                var LOGOUT_MS = 15 * 60 * 1000;
+                var warningTimer, logoutTimer;
+                var overlay = document.getElementById('sessionWarningOverlay');
+
+                function resetTimers() {
+                    clearTimeout(warningTimer);
+                    clearTimeout(logoutTimer);
+                    overlay.classList.remove('show');
+                    warningTimer = setTimeout(showWarning, WARNING_MS);
+                    logoutTimer = setTimeout(doLogout, LOGOUT_MS);
+                }
+
+                function showWarning() {
+                    overlay.classList.add('show');
+                }
+
+                function doLogout() {
+                    document.getElementById('logoutForm').submit();
+                }
+
+                ['mousemove', 'click', 'keypress'].forEach(function (evt) {
+                    document.addEventListener(evt, resetTimers, true);
+                });
+
+                document.getElementById('sessionStayBtn').addEventListener('click', resetTimers);
+
+                resetTimers();
+            })();
+        </script>
+    }
 </body>
 </html>
