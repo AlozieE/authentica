@@ -1,17 +1,13 @@
 using Authentica_app.BLL.Services;
 using Authentica_app.DAL.Database;
+using Authentica_app.DAL.Identity;
 using Authentica_app.DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
-                       throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddSingleton<DatabaseConnection>();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     {
@@ -20,7 +16,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
         options.Lockout.AllowedForNewUsers = true;
     })
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddUserStore<UserStore>();
 
 builder.Services.AddControllersWithViews();
 
@@ -44,11 +40,7 @@ builder.Services.AddScoped<VaultItemService>();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseMigrationsEndPoint();
-}
-else
+if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();

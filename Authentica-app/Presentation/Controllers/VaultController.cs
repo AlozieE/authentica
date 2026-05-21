@@ -83,7 +83,7 @@ namespace Authentica_app.Presentation.Controllers
             if (ModelState.IsValid)
             {
                 existingVault.Name = vault.Name;
-                await _vaultService.UpdateVault();
+                await _vaultService.UpdateVault(existingVault);
                 return RedirectToAction(nameof(Index));
             }
             return View(vault);

@@ -36,7 +36,7 @@ namespace Authentica_app.BLL.Services
             var json = JsonSerializer.Serialize(data);
             (item.EncryptedData, item.IV) = _encryptionService.Encrypt(json);
             item.UpdatedAt = DateTime.UtcNow;
-            await _vaultItemRepository.Update();
+            await _vaultItemRepository.Update(item);
         }
 
         public async Task DeleteItem(VaultItem item)

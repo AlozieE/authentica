@@ -21,8 +21,8 @@ namespace Authentica_app.BLL.Services
         public async Task CreateVault(Vault vault)
             => await _vaultRepository.Add(vault);
 
-        public async Task UpdateVault()
-            => await _vaultRepository.Update();
+        public async Task UpdateVault(Vault vault)
+            => await _vaultRepository.Update(vault);
 
         public async Task DeleteVault(Vault vault)
             => await _vaultRepository.Delete(vault);

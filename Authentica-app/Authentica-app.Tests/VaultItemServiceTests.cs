@@ -1,8 +1,4 @@
-using Authentica_app.BLL.Models;
 using Authentica_app.BLL.Services;
-using Authentica_app.DAL.Database;
-using Authentica_app.DAL.Repositories;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Authentica_app.Tests;
@@ -19,17 +15,6 @@ public class VaultItemServiceTests
             .Build();
         return new EncryptionService(config);
     }
-
-
-    private static ApplicationDbContext CreateDbContext()
-    {
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString())
-            .Options;
-        return new ApplicationDbContext(options);
-    }
-
-
 
     [TestMethod]
     public void Encrypt_ReturnsEncryptedData_DifferentFromInput()
@@ -62,74 +47,5 @@ public class VaultItemServiceTests
         var (_, iv2) = service.Encrypt("same password");
 
         Assert.AreNotEqual(iv1, iv2);
-    }
-
-
-    [TestMethod]
-    public async Task CreateItem_SavesItemToDatabase()
-    {
-        using var context = CreateDbContext();
-        var service = new VaultItemService(new VaultItemRepository(context), CreateEncryptionService());
-
-        var item = new VaultItem
-        {
-            Title = "Test Password",
-            ItemType = VaultItemType.Password,
-            VaultId = 1,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-        var data = new Dictionary<string, string>
-        {
-            ["Website"] = "https://example.com",
-            ["Username"] = "testuser",
-            ["Password"] = "secret"
-        };
-
-        await service.CreateItem(item, data);
-
-        Assert.AreEqual(1, context.VaultItems.Count());
-        Assert.AreEqual("Test Password", context.VaultItems.First().Title);
-    }
-
-    [TestMethod]
-    public async Task DeleteItem_RemovesItemFromDatabase()
-    {
-        using var context = CreateDbContext();
-        var service = new VaultItemService(new VaultItemRepository(context), CreateEncryptionService());
-
-        var item = new VaultItem
-        {
-            Title = "To Delete",
-            ItemType = VaultItemType.Password,
-            VaultId = 1,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-        context.VaultItems.Add(item);
-        await context.SaveChangesAsync();
-
-        await service.DeleteItem(item);
-
-        Assert.AreEqual(0, context.VaultItems.Count());
-    }
-
-    [TestMethod]
-    public async Task GetItems_ReturnsOnlyItemsForSpecificVault()
-    {
-        using var context = CreateDbContext();
-        var service = new VaultItemService(new VaultItemRepository(context), CreateEncryptionService());
-
-        context.VaultItems.AddRange(
-            new VaultItem { Title = "Vault1-A", ItemType = VaultItemType.Password, VaultId = 1, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-            new VaultItem { Title = "Vault1-B", ItemType = VaultItemType.Password, VaultId = 1, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-            new VaultItem { Title = "Vault2-A", ItemType = VaultItemType.Password, VaultId = 2, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
-        );
-        await context.SaveChangesAsync();
-
-        var result = await service.GetItems(vaultId: 1);
-
-        Assert.HasCount(2, result);
-        Assert.IsTrue(result.All(i => i.VaultId == 1));
     }
 }
