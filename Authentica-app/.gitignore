@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+
+# Build output
+bin/
+obj/
+
+# User settings
+*.user
+*.suo
+.vs/
+
+# Logs
+*.log
+
+# NuGet
+packages/
+*.nupkg
+
+# Environment
+appsettings.Development.json
+
+# JetBrains Rider
+.idea/
+*.sln.iml
