@@ -1,6 +1,8 @@
+using Authentica_app.BLL.Interfaces;
 using Authentica_app.BLL.Services;
 using Authentica_app.DAL.Database;
 using Authentica_app.DAL.Identity;
+using Authentica_app.DAL.Interfaces;
 using Authentica_app.DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -32,11 +34,11 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
     options.AreaViewLocationFormats.Add("/Presentation/Views/Shared/{0}.cshtml");
 });
 
-builder.Services.AddScoped<VaultRepository>();
-builder.Services.AddScoped<VaultItemRepository>();
+builder.Services.AddScoped<IVaultRepository, VaultRepository>();
+builder.Services.AddScoped<IVaultItemRepository, VaultItemRepository>();
 builder.Services.AddScoped<EncryptionService>();
-builder.Services.AddScoped<VaultService>();
-builder.Services.AddScoped<VaultItemService>();
+builder.Services.AddScoped<IVaultService, VaultService>();
+builder.Services.AddScoped<IVaultItemService, VaultItemService>();
 
 var app = builder.Build();
 

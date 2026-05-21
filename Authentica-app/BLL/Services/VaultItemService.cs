@@ -1,15 +1,16 @@
 using System.Text.Json;
+using Authentica_app.BLL.Interfaces;
 using Authentica_app.BLL.Models;
-using Authentica_app.DAL.Repositories;
+using Authentica_app.DAL.Interfaces;
 
 namespace Authentica_app.BLL.Services
 {
-    public class VaultItemService
+    public class VaultItemService : IVaultItemService
     {
-        private readonly VaultItemRepository _vaultItemRepository;
+        private readonly IVaultItemRepository _vaultItemRepository;
         private readonly EncryptionService _encryptionService;
 
-        public VaultItemService(VaultItemRepository vaultItemRepository, EncryptionService encryptionService)
+        public VaultItemService(IVaultItemRepository vaultItemRepository, EncryptionService encryptionService)
         {
             _vaultItemRepository = vaultItemRepository;
             _encryptionService = encryptionService;

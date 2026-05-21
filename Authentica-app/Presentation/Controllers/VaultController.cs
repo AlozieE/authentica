@@ -1,5 +1,5 @@
+using Authentica_app.BLL.Interfaces;
 using Authentica_app.BLL.Models;
-using Authentica_app.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +9,10 @@ namespace Authentica_app.Presentation.Controllers
     [Authorize]
     public class VaultController : Controller
     {
-        private readonly VaultService _vaultService;
+        private readonly IVaultService _vaultService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public VaultController(VaultService vaultService, UserManager<IdentityUser> userManager)
+        public VaultController(IVaultService vaultService, UserManager<IdentityUser> userManager)
         {
             _vaultService = vaultService;
             _userManager = userManager;

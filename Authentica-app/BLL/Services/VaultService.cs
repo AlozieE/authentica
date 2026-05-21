@@ -1,13 +1,14 @@
+using Authentica_app.BLL.Interfaces;
 using Authentica_app.BLL.Models;
-using Authentica_app.DAL.Repositories;
+using Authentica_app.DAL.Interfaces;
 
 namespace Authentica_app.BLL.Services
 {
-    public class VaultService
+    public class VaultService : IVaultService
     {
-        private readonly VaultRepository _vaultRepository;
+        private readonly IVaultRepository _vaultRepository;
 
-        public VaultService(VaultRepository vaultRepository)
+        public VaultService(IVaultRepository vaultRepository)
         {
             _vaultRepository = vaultRepository;
         }

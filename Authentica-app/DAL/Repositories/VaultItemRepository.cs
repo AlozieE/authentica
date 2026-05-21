@@ -1,10 +1,11 @@
 using Authentica_app.BLL.Models;
 using Authentica_app.DAL.Database;
+using Authentica_app.DAL.Interfaces;
 using Microsoft.Data.SqlClient;
 
 namespace Authentica_app.DAL.Repositories
 {
-    public class VaultItemRepository
+    public class VaultItemRepository : IVaultItemRepository
     {
         private readonly DatabaseConnection _db;
 
