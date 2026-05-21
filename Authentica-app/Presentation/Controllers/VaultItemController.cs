@@ -123,6 +123,28 @@ namespace Authentica_app.Presentation.Controllers
             return RedirectToAction(nameof(Index), new { type = item.ItemType });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetDecryptedValue(int id)
+        {
+            var userId = _userManager.GetUserId(User)!;
+            var item = await _vaultItemService.GetById(id);
+
+            if (item == null || item.Vault.UserId != userId)
+                return NotFound();
+
+            var data = _vaultItemService.DecryptItemData(item);
+
+            var value = item.ItemType switch
+            {
+                VaultItemType.Password   => data.GetValueOrDefault("Password"),
+                VaultItemType.CreditCard => data.GetValueOrDefault("CardNumber"),
+                VaultItemType.SecureNote => data.GetValueOrDefault("Content"),
+                _                        => null
+            };
+
+            return Json(new { value });
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
