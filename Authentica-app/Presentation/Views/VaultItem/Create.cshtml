@@ -27,8 +27,36 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Wachtwoord</label>
-                    <input name="Password" type="password" class="form-control" />
+                    <div class="input-group">
+                        <input name="Password" id="passwordField" type="password" class="form-control" />
+                        <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()" id="togglePasswordBtn" title="Toon/verberg wachtwoord">👁</button>
+                        <input type="number" id="passwordLength" class="form-control" style="max-width: 80px;" value="16" min="8" max="64" title="Lengte" />
+                        <button type="button" class="btn btn-outline-secondary" onclick="generatePassword()">Genereer</button>
+                    </div>
                 </div>
+
+                <script>
+                    function togglePassword() {
+                        const field = document.getElementById('passwordField');
+                        field.type = field.type === 'password' ? 'text' : 'password';
+                    }
+
+                    function generatePassword() {
+                        const length = parseInt(document.getElementById('passwordLength').value, 10);
+                        if (length < 8) {
+                            alert('Wachtwoordlengte moet minimaal 8 zijn.');
+                            return;
+                        }
+                        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@@#$%^&*()_+-=[]{}|;:,.<>?';
+                        let password = '';
+                        for (let i = 0; i < length; i++) {
+                            password += chars.charAt(Math.floor(Math.random() * chars.length));
+                        }
+                        const field = document.getElementById('passwordField');
+                        field.value = password;
+                        field.type = 'text';
+                    }
+                </script>
             }
             else if (ViewBag.ItemType == Authentica_app.BLL.Models.VaultItemType.CreditCard)
             {
