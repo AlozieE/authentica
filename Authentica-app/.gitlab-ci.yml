@@ -3,7 +3,6 @@ stages:
 
 run-tests:
   stage: test
-  image: mcr.microsoft.com/dotnet/sdk:10.0
   script:
     - dotnet restore
     - dotnet build
