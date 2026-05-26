@@ -1,6 +1,6 @@
-using Authentica_app.BLL.Models;
-using Authentica_app.BLL.Services;
-using Authentica_app.DAL.Interfaces;
+using Authentica.DAL.Models;
+using Authentica.BLL.Services;
+using Authentica.DAL.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Moq;
 

@@ -1,6 +1,6 @@
-using Authentica_app.BLL.Interfaces;
-using Authentica_app.BLL.Models;
-using Authentica_app.Presentation.Controllers;
+using Authentica.BLL.Interfaces;
+using Authentica.DAL.Models;
+using Authentica.Presentation.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +16,7 @@ public class VaultControllerTests
     private Mock<UserManager<IdentityUser>> _mockUserManager = null!;
     private VaultController _controller = null!;
     private const string UserId = "user1";
-
+    
     [TestInitialize]
     public void Setup()
     {

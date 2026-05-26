@@ -1,0 +1,25 @@
+@model Authentica.DAL.Models.Vault
+@{ ViewData["Title"] = "Edit Vault"; }
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Edit Vault</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary">← Back to Vaults</a>
+</div>
+
+<div class="card" style="max-width: 500px;">
+    <div class="card-body">
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="VaultId" />
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label fw-semibold"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

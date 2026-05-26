@@ -1,4 +1,4 @@
-using Authentica_app.BLL.Services;
+using Authentica.BLL.Services;
 using Microsoft.Extensions.Configuration;
 
 namespace Authentica_app.Tests;

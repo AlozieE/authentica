@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Authentica-app.csproj" />
+  <Project Path="Authentica.BLL/Authentica.BLL.csproj" />
+  <Project Path="Authentica.DAL/Authentica.DAL.csproj" />
+</Solution>

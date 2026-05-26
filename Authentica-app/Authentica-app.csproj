@@ -11,6 +11,10 @@
     <ItemGroup>
         <None Include="wwwroot\images\authentica.png" />
         <Compile Remove="Authentica-app.Tests/**" />
+        <Compile Remove="Authentica.BLL/**" />
+        <Compile Remove="Authentica.DAL/**" />
+        <Content Remove="Authentica.BLL/**" />
+        <Content Remove="Authentica.DAL/**" />
         <Content Remove="Authentica-app.Tests/**" />
         <EmbeddedResource Remove="Authentica-app.Tests/**" />
         <None Remove="Authentica-app.Tests/**" />
@@ -19,6 +23,11 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.24" />
         <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="Authentica.BLL\Authentica.BLL.csproj" />
+      <ProjectReference Include="Authentica.DAL\Authentica.DAL.csproj" />
     </ItemGroup>
 
 </Project>

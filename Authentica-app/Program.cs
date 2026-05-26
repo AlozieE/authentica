@@ -1,9 +1,9 @@
-using Authentica_app.BLL.Interfaces;
-using Authentica_app.BLL.Services;
-using Authentica_app.DAL.Database;
-using Authentica_app.DAL.Identity;
-using Authentica_app.DAL.Interfaces;
-using Authentica_app.DAL.Repositories;
+using Authentica.BLL.Interfaces;
+using Authentica.BLL.Services;
+using Authentica.DAL.Database;
+using Authentica.DAL.Identity;
+using Authentica.DAL.Interfaces;
+using Authentica.DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
 
@@ -39,13 +39,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.Configure<RazorViewEngineOptions>(options =>
 {
     options.ViewLocationFormats.Clear();
-    options.ViewLocationFormats.Add("/Presentation/Views/{1}/{0}.cshtml");
-    options.ViewLocationFormats.Add("/Presentation/Views/Shared/{0}.cshtml");
+    options.ViewLocationFormats.Add("/Views/{1}/{0}.cshtml");
+    options.ViewLocationFormats.Add("/Views/Shared/{0}.cshtml");
 
     options.AreaViewLocationFormats.Clear();
     options.AreaViewLocationFormats.Add("/Areas/{2}/Views/{1}/{0}.cshtml");
     options.AreaViewLocationFormats.Add("/Areas/{2}/Views/Shared/{0}.cshtml");
-    options.AreaViewLocationFormats.Add("/Presentation/Views/Shared/{0}.cshtml");
+    options.AreaViewLocationFormats.Add("/Views/Shared/{0}.cshtml");
 });
 
 builder.Services.AddScoped<IVaultRepository, VaultRepository>();

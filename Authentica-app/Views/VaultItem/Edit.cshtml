@@ -1,0 +1,109 @@
+@model Authentica.DAL.Models.VaultItem
+@{ ViewData["Title"] = "Bewerken"; }
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>@ViewBag.ItemType bewerken</h2>
+    <a asp-action="Index" asp-route-vaultId="@ViewBag.Vault.VaultId" asp-route-type="@ViewBag.ItemType" class="btn btn-outline-secondary">← Terug</a>
+</div>
+
+<div class="card" style="max-width: 500px;">
+    <div class="card-body">
+        <form asp-action="Edit" asp-route-id="@Model.VaultItemId" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Titel</label>
+                <input name="Title" value="@Model.Title" class="form-control" required />
+            </div>
+
+            @if (ViewBag.ItemType == Authentica.DAL.Models.VaultItemType.Password)
+            {
+                <div class="mb-3">
+                    <label class="form-label">Website</label>
+                    <input name="Website" value="@ViewBag.Data?["Website"]" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Gebruikersnaam</label>
+                    <input name="Username" value="@ViewBag.Data?["Username"]" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Wachtwoord</label>
+                    <div class="input-group mb-2">
+                        <input id="passwordField" name="Password" type="password" value="@ViewBag.Data?["Password"]" class="form-control" />
+                        <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility()">
+                            <span id="eyeIcon">&#128065;</span>
+                        </button>
+                    </div>
+                    <div class="input-group">
+                        <input id="passwordLength" type="number" class="form-control" value="16" min="8" max="64" style="max-width: 90px;" />
+                        <button type="button" class="btn btn-outline-primary" onclick="generatePassword()">Genereer</button>
+                    </div>
+                </div>
+            }
+            else if (ViewBag.ItemType == Authentica.DAL.Models.VaultItemType.CreditCard)
+            {
+                <div class="mb-3">
+                    <label class="form-label">Kaarthouder</label>
+                    <input name="CardHolder" value="@ViewBag.Data?["CardHolder"]" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Kaartnummer</label>
+                    <input name="CardNumber" value="@ViewBag.Data?["CardNumber"]" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Vervaldatum</label>
+                    <input name="ExpiryDate" value="@ViewBag.Data?["ExpiryDate"]" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">CVC</label>
+                    <input name="CVC" value="@ViewBag.Data?["CVC"]" class="form-control" />
+                </div>
+            }
+            else if (ViewBag.ItemType == Authentica.DAL.Models.VaultItemType.SecureNote)
+            {
+                <div class="mb-3">
+                    <label class="form-label">Inhoud</label>
+                    <textarea name="Content" class="form-control" rows="5">@ViewBag.Data?["Content"]</textarea>
+                </div>
+            }
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Opslaan</button>
+                <a asp-action="Index" asp-route-vaultId="@ViewBag.Vault.VaultId" asp-route-type="@ViewBag.ItemType" class="btn btn-outline-secondary">Annuleren</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (ViewBag.ItemType == Authentica.DAL.Models.VaultItemType.Password)
+{
+    <script>
+        function generatePassword() {
+            var length = parseInt(document.getElementById('passwordLength').value);
+            if (length < 8) {
+                alert('Wachtwoordlengte moet minimaal 8 tekens zijn.');
+                return;
+            }
+            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@@#$%^&*()_+-=[]{}|;:,.<>?';
+            var password = '';
+            for (var i = 0; i < length; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            var field = document.getElementById('passwordField');
+            field.value = password;
+            field.type = 'text';
+            document.getElementById('eyeIcon').textContent = '🙈';
+        }
+
+        function togglePasswordVisibility() {
+            var field = document.getElementById('passwordField');
+            if (field.type === 'password') {
+                field.type = 'text';
+                document.getElementById('eyeIcon').innerHTML = '&#128065;&#65038;';
+            } else {
+                field.type = 'password';
+                document.getElementById('eyeIcon').innerHTML = '&#128065;';
+            }
+        }
+    </script>
+}
