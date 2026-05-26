@@ -6,4 +6,4 @@ run-tests:
     - cd Authentica-app
     - dotnet restore Authentica.slnx
     - dotnet build Authentica.slnx --no-restore
-    - dotnet test Authentica-app.Tests/ --no-build
+    - dotnet test Authentica-app.Tests/
