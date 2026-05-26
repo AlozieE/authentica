@@ -1,0 +1,169 @@
+@{
+    ViewData["Title"] = "Set Up Two-Factor Authentication";
+}
+
+<style>
+    .tf-card {
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        max-width: 560px;
+        box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+
+    .tf-card h2 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 8px;
+    }
+
+    .tf-card .subtitle {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 28px;
+    }
+
+    .step-label {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: #4f46e5;
+        margin-bottom: 8px;
+    }
+
+    .step-desc {
+        font-size: 14px;
+        color: #374151;
+        margin-bottom: 16px;
+    }
+
+    #qrcode-container {
+        display: inline-block;
+        padding: 12px;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        margin-bottom: 16px;
+    }
+
+    .manual-key {
+        font-family: monospace;
+        background: #f3f4f6;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 14px;
+        letter-spacing: .08em;
+        color: #1a1a2e;
+        word-break: break-all;
+        margin-bottom: 28px;
+    }
+
+    .divider {
+        border: none;
+        border-top: 1px solid #e5e7eb;
+        margin: 24px 0;
+    }
+
+    .form-group { margin-bottom: 20px; }
+
+    .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 6px;
+    }
+
+    .form-group input[type=text] {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 15px;
+        letter-spacing: .12em;
+        outline: none;
+        transition: border-color .15s;
+    }
+
+    .form-group input[type=text]:focus { border-color: #4f46e5; }
+
+    .text-danger { color: #ef4444; font-size: 13px; margin-top: 4px; }
+
+    .btn-primary-tf {
+        background: #4f46e5;
+        color: white;
+        border: none;
+        padding: 11px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-primary-tf:hover { background: #4338ca; }
+
+    .btn-link-tf {
+        font-size: 14px;
+        color: #6b7280;
+        text-decoration: none;
+        margin-left: 16px;
+    }
+
+    .btn-link-tf:hover { color: #374151; }
+</style>
+
+<div class="tf-card">
+    <h2>Set Up Two-Factor Authentication</h2>
+    <p class="subtitle">Scan the QR code below with your authenticator app, then enter the 6-digit code to confirm.</p>
+
+    <div class="step-label">Step 1 — Scan QR Code</div>
+    <p class="step-desc">Use Google Authenticator, Authy, or any TOTP app to scan this code.</p>
+
+    <div id="qrcode-container">
+        <canvas id="qrcode"></canvas>
+    </div>
+
+    <div class="step-label">Or enter manually</div>
+    <div class="manual-key">@ViewBag.Secret</div>
+
+    <hr class="divider" />
+
+    <div class="step-label">Step 2 — Verify</div>
+    <p class="step-desc">Enter the 6-digit code shown in your authenticator app.</p>
+
+    <form asp-action="Setup" asp-controller="TwoFactor" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="secret" value="@ViewBag.Secret" />
+
+        <div class="form-group">
+            <label for="code">Verification code</label>
+            <input type="text" id="code" name="code" inputmode="numeric"
+                   autocomplete="one-time-code" maxlength="6" placeholder="123456" />
+            @if (!ViewData.ModelState.IsValid)
+            {
+                foreach (var error in ViewData.ModelState["code"]?.Errors ?? Enumerable.Empty<Microsoft.AspNetCore.Mvc.ModelBinding.ModelError>())
+                {
+                    <div class="text-danger">@error.ErrorMessage</div>
+                }
+            }
+        </div>
+
+        <button type="submit" class="btn-primary-tf">Verify &amp; Enable</button>
+        <a asp-action="Manage" asp-controller="TwoFactor" class="btn-link-tf">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script>
+        QRCode.toCanvas(
+            document.getElementById('qrcode'),
+            '@Html.Raw(ViewBag.QrUri)',
+            { width: 200, margin: 1 },
+            function (err) { if (err) console.error(err); }
+        );
+    </script>
+}

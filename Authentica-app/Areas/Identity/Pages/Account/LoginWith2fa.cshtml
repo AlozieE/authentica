@@ -1,0 +1,139 @@
+@page
+@model Authentica_app.Areas.Identity.Pages.Account.LoginWith2faModel
+@{
+    ViewData["Title"] = "Two-Factor Authentication";
+}
+
+<style>
+    .login-2fa-wrap {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 60vh;
+    }
+
+    .login-2fa-card {
+        background: white;
+        border-radius: 12px;
+        padding: 40px 36px;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 1px 4px rgba(0,0,0,.08);
+        text-align: center;
+    }
+
+    .login-2fa-card .icon {
+        font-size: 36px;
+        margin-bottom: 16px;
+    }
+
+    .login-2fa-card h2 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 8px;
+    }
+
+    .login-2fa-card p {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 28px;
+    }
+
+    .form-group { margin-bottom: 20px; text-align: left; }
+
+    .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 6px;
+    }
+
+    .form-group input[type=text] {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 20px;
+        letter-spacing: .2em;
+        text-align: center;
+        outline: none;
+        transition: border-color .15s;
+    }
+
+    .form-group input[type=text]:focus { border-color: #4f46e5; }
+
+    .btn-submit {
+        width: 100%;
+        background: #4f46e5;
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background .15s;
+        margin-bottom: 16px;
+    }
+
+    .btn-submit:hover { background: #4338ca; }
+
+    .validation-summary {
+        background: #fee2e2;
+        color: #991b1b;
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-size: 14px;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .validation-summary ul { margin: 0; padding-left: 20px; }
+
+    .text-muted-link {
+        font-size: 13px;
+        color: #9ca3af;
+        text-decoration: none;
+    }
+
+    .text-muted-link:hover { color: #6b7280; }
+</style>
+
+<div class="login-2fa-wrap">
+    <div class="login-2fa-card">
+        <div class="icon">&#128274;</div>
+        <h2>Two-Factor Verification</h2>
+        <p>Open your authenticator app and enter the 6-digit code for <strong>Authentica</strong>.</p>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="validation-summary">
+                <ul>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Input.TwoFactorCode" />
+
+            <div class="form-group">
+                <label asp-for="Input.TwoFactorCode">Authenticator code</label>
+                <input asp-for="Input.TwoFactorCode" type="text"
+                       inputmode="numeric" autocomplete="one-time-code"
+                       maxlength="6" placeholder="123456"
+                       autofocus />
+            </div>
+
+            <button type="submit" class="btn-submit">Verify</button>
+        </form>
+
+        <a asp-area="Identity" asp-page="/Account/Login" class="text-muted-link">Back to login</a>
+    </div>
+</div>

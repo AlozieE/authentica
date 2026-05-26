@@ -1,0 +1,119 @@
+@{
+    ViewData["Title"] = "Two-Factor Authentication";
+    bool enabled = ViewBag.TwoFactorEnabled == true;
+}
+
+<style>
+    .tf-card {
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        max-width: 520px;
+        box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+
+    .tf-card h2 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 8px;
+    }
+
+    .tf-card p {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 24px;
+    }
+
+    .badge-enabled {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #d1fae5;
+        color: #065f46;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 99px;
+        margin-bottom: 20px;
+    }
+
+    .badge-disabled {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #fee2e2;
+        color: #991b1b;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 99px;
+        margin-bottom: 20px;
+    }
+
+    .btn-primary-tf {
+        background: #4f46e5;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-primary-tf:hover { background: #4338ca; color: white; }
+
+    .btn-danger-tf {
+        background: white;
+        color: #ef4444;
+        border: 1px solid #ef4444;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-danger-tf:hover { background: #ef4444; color: white; }
+
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="tf-card">
+    <h2>Two-Factor Authentication</h2>
+    <p>Add an extra layer of security to your account using a TOTP authenticator app (e.g. Google Authenticator, Authy).</p>
+
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage as string))
+    {
+        <div class="alert-success">@ViewBag.SuccessMessage</div>
+    }
+
+    @if (enabled)
+    {
+        <div class="badge-enabled">&#10003; Enabled</div>
+        <p>Your account is protected with two-factor authentication.</p>
+        <form asp-action="Disable" asp-controller="TwoFactor" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn-danger-tf"
+                    onclick="return confirm('Are you sure you want to disable two-factor authentication?')">
+                Disable 2FA
+            </button>
+        </form>
+    }
+    else
+    {
+        <div class="badge-disabled">&#10007; Disabled</div>
+        <p>Your account is not protected with two-factor authentication.</p>
+        <a asp-action="Setup" asp-controller="TwoFactor" class="btn-primary-tf">Enable 2FA</a>
+    }
+</div>

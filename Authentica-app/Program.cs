@@ -50,9 +50,11 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
 
 builder.Services.AddScoped<IVaultRepository, VaultRepository>();
 builder.Services.AddScoped<IVaultItemRepository, VaultItemRepository>();
+builder.Services.AddScoped<ITwoFactorRepository, TwoFactorRepository>();
 builder.Services.AddScoped<EncryptionService>();
 builder.Services.AddScoped<IVaultService, VaultService>();
 builder.Services.AddScoped<IVaultItemService, VaultItemService>();
+builder.Services.AddScoped<ITwoFactorService, TwoFactorService>();
 
 var app = builder.Build();
 

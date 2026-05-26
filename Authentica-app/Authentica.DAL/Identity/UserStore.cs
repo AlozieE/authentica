@@ -9,7 +9,8 @@ namespace Authentica.DAL.Identity
         IUserPasswordStore<IdentityUser>,
         IUserEmailStore<IdentityUser>,
         IUserLockoutStore<IdentityUser>,
-        IUserSecurityStampStore<IdentityUser>
+        IUserSecurityStampStore<IdentityUser>,
+        IUserTwoFactorStore<IdentityUser>
     {
         private readonly DatabaseConnection _db;
 
@@ -227,6 +228,17 @@ namespace Authentica.DAL.Identity
 
         public Task<string?> GetSecurityStampAsync(IdentityUser user, CancellationToken ct) =>
             Task.FromResult(user.SecurityStamp);
+
+        // ── IUserTwoFactorStore ───────────────────────────────────────────────────
+
+        public Task<bool> GetTwoFactorEnabledAsync(IdentityUser user, CancellationToken ct) =>
+            Task.FromResult(user.TwoFactorEnabled);
+
+        public Task SetTwoFactorEnabledAsync(IdentityUser user, bool enabled, CancellationToken ct)
+        {
+            user.TwoFactorEnabled = enabled;
+            return Task.CompletedTask;
+        }
 
         // ── Helpers ───────────────────────────────────────────────────────────────
 
