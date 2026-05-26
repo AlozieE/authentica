@@ -1,10 +1,9 @@
 stages:
   - test
-
 run-tests:
   stage: test
   script:
     - cd Authentica-app
-    - dotnet restore
-    - dotnet build
-    - dotnet test --no-build
+    - dotnet restore Authentica.slnx
+    - dotnet build Authentica.slnx --no-restore
+    - dotnet test Authentica-app.Tests/ --no-build
