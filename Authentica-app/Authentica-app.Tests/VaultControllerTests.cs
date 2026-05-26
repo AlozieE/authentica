@@ -1,6 +1,6 @@
 using Authentica.BLL.Interfaces;
 using Authentica.DAL.Models;
-using Authentica.Presentation.Controllers;
+using Authentica_app.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
