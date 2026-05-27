@@ -1,5 +1,6 @@
 using Authentica.BLL.Interfaces;
 using Authentica.DAL.Models;
+using Authentica_app.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +49,7 @@ namespace Authentica_app.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int vaultId, VaultItemType type, IFormCollection form)
+        public async Task<IActionResult> Create(int vaultId, VaultItemType type, VaultItemCreateDto dto, IFormCollection form)
         {
             var userId = _userManager.GetUserId(User)!;
             var vault = await _vaultService.GetById(vaultId, userId);
@@ -56,11 +57,8 @@ namespace Authentica_app.Controllers
             if (vault == null)
                 return NotFound();
 
-            var title = form["Title"].ToString();
-
-            if (string.IsNullOrWhiteSpace(title))
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("Title", "Titel is verplicht.");
                 ViewBag.Vault = vault;
                 ViewBag.ItemType = type;
                 return View();
@@ -75,7 +73,7 @@ namespace Authentica_app.Controllers
 
             var item = new VaultItem
             {
-                Title = title,
+                Title = dto.Title,
                 ItemType = type,
                 VaultId = vaultId,
                 CreatedAt = DateTime.UtcNow,
@@ -102,13 +100,21 @@ namespace Authentica_app.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, IFormCollection form)
+        public async Task<IActionResult> Edit(int id, VaultItemCreateDto dto, IFormCollection form)
         {
             var userId = _userManager.GetUserId(User)!;
             var item = await _vaultItemService.GetById(id);
 
             if (item == null || item.Vault.UserId != userId)
                 return NotFound();
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Data = _vaultItemService.DecryptItemData(item);
+                ViewBag.ItemType = item.ItemType;
+                ViewBag.Vault = item.Vault;
+                return View(item);
+            }
 
             var data = new Dictionary<string, string>();
             foreach (var key in form.Keys)
@@ -117,7 +123,7 @@ namespace Authentica_app.Controllers
                     data[key] = form[key]!;
             }
 
-            item.Title = form["Title"].ToString();
+            item.Title = dto.Title;
             await _vaultItemService.UpdateItem(item, data);
 
             return RedirectToAction(nameof(Index), new { type = item.ItemType });

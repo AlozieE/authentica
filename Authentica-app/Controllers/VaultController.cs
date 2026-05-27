@@ -1,5 +1,6 @@
 using Authentica.BLL.Interfaces;
 using Authentica.DAL.Models;
+using Authentica_app.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -32,19 +33,20 @@ namespace Authentica_app.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Vault vault)
+        public async Task<IActionResult> Create(VaultCreateDto dto)
         {
-            ModelState.Remove("UserId");
-            ModelState.Remove("User");
-
             if (ModelState.IsValid)
             {
-                vault.UserId = _userManager.GetUserId(User)!;
-                vault.CreatedAt = DateTime.UtcNow;
+                var vault = new Vault
+                {
+                    Name = dto.Name,
+                    UserId = _userManager.GetUserId(User)!,
+                    CreatedAt = DateTime.UtcNow
+                };
                 await _vaultService.CreateVault(vault);
                 return RedirectToAction(nameof(Index));
             }
-            return View(vault);
+            return View(dto);
         }
 
         public async Task<IActionResult> Details(int id)
@@ -64,16 +66,14 @@ namespace Authentica_app.Controllers
 
             if (vault == null)
                 return NotFound();
-            return View(vault);
+
+            return View(new VaultCreateDto { Name = vault.Name });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Vault vault)
+        public async Task<IActionResult> Edit(int id, VaultCreateDto dto)
         {
-            ModelState.Remove("UserId");
-            ModelState.Remove("User");
-
             var userId = _userManager.GetUserId(User)!;
             var existingVault = await _vaultService.GetById(id, userId);
 
@@ -82,11 +82,11 @@ namespace Authentica_app.Controllers
 
             if (ModelState.IsValid)
             {
-                existingVault.Name = vault.Name;
+                existingVault.Name = dto.Name;
                 await _vaultService.UpdateVault(existingVault);
                 return RedirectToAction(nameof(Index));
             }
-            return View(vault);
+            return View(dto);
         }
 
         [HttpPost]

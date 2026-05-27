@@ -1,3 +1,4 @@
+using Authentica_app.DTOs;
 using Authentica.BLL.Interfaces;
 using Authentica.DAL.Models;
 using Authentica_app.Controllers;
@@ -61,12 +62,12 @@ public class VaultControllerTests
     [TestMethod]
     public async Task Create_AddsVaultForCurrentUser()
     {
-        var vault = new Vault { Name = "Nieuwe Vault" };
+        var dto = new VaultCreateDto { Name = "Nieuwe Vault" };
         _mockVaultService.Setup(s => s.CreateVault(It.IsAny<Vault>())).Returns(Task.CompletedTask);
 
-        await _controller.Create(vault);
+        await _controller.Create(dto);
 
-        Assert.AreEqual(UserId, vault.UserId);
+        
         _mockVaultService.Verify(s => s.CreateVault(It.Is<Vault>(v => v.UserId == UserId)), Times.Once);
     }
 
