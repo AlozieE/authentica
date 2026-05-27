@@ -8,6 +8,7 @@ namespace Authentica.DAL.Identity
         IUserStore<IdentityUser>,
         IUserPasswordStore<IdentityUser>,
         IUserEmailStore<IdentityUser>,
+        IUserPhoneNumberStore<IdentityUser>,
         IUserLockoutStore<IdentityUser>,
         IUserSecurityStampStore<IdentityUser>,
         IUserTwoFactorStore<IdentityUser>
@@ -183,6 +184,26 @@ namespace Authentica.DAL.Identity
         public Task SetNormalizedEmailAsync(IdentityUser user, string? normalizedEmail, CancellationToken ct)
         {
             user.NormalizedEmail = normalizedEmail;
+            return Task.CompletedTask;
+        }
+
+        // ── IUserPhoneNumberStore ─────────────────────────────────────────────────
+
+        public Task SetPhoneNumberAsync(IdentityUser user, string? phoneNumber, CancellationToken ct)
+        {
+            user.PhoneNumber = phoneNumber;
+            return Task.CompletedTask;
+        }
+
+        public Task<string?> GetPhoneNumberAsync(IdentityUser user, CancellationToken ct) =>
+            Task.FromResult(user.PhoneNumber);
+
+        public Task<bool> GetPhoneNumberConfirmedAsync(IdentityUser user, CancellationToken ct) =>
+            Task.FromResult(user.PhoneNumberConfirmed);
+
+        public Task SetPhoneNumberConfirmedAsync(IdentityUser user, bool confirmed, CancellationToken ct)
+        {
+            user.PhoneNumberConfirmed = confirmed;
             return Task.CompletedTask;
         }
 
