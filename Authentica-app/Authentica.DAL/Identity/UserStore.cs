@@ -12,7 +12,6 @@ namespace Authentica.DAL.Identity
         IUserLockoutStore<IdentityUser>,
         IUserSecurityStampStore<IdentityUser>,
         IUserTwoFactorStore<IdentityUser>,
-        IUserPhoneNumberStore<IdentityUser>,
         IUserAuthenticatorKeyStore<IdentityUser>
     {
         private readonly DatabaseConnection _db;
@@ -22,7 +21,6 @@ namespace Authentica.DAL.Identity
             _db = db;
         }
 
-        // ── IUserStore ────────────────────────────────────────────────────────────
 
         public Task<string> GetUserIdAsync(IdentityUser user, CancellationToken ct) =>
             Task.FromResult(user.Id);
@@ -263,21 +261,8 @@ namespace Authentica.DAL.Identity
             return Task.CompletedTask;
         }
 
-        // ── IUserPhoneNumberStore ─────────────────────────────────────────────────
 
-        public Task SetPhoneNumberAsync(IdentityUser user, string? phoneNumber, CancellationToken ct) =>
-            Task.CompletedTask;
-
-        public Task<string?> GetPhoneNumberAsync(IdentityUser user, CancellationToken ct) =>
-            Task.FromResult<string?>(null);
-
-        public Task<bool> GetPhoneNumberConfirmedAsync(IdentityUser user, CancellationToken ct) =>
-            Task.FromResult(false);
-
-        public Task SetPhoneNumberConfirmedAsync(IdentityUser user, bool confirmed, CancellationToken ct) =>
-            Task.CompletedTask;
-
-        // ── IUserAuthenticatorKeyStore ────────────────────────────────────────────
+  
 
         public async Task SetAuthenticatorKeyAsync(IdentityUser user, string key, CancellationToken ct)
         {
@@ -310,7 +295,6 @@ namespace Authentica.DAL.Identity
             return result is DBNull or null ? null : (string)result;
         }
 
-        // ── Helpers ───────────────────────────────────────────────────────────────
 
         public void Dispose() { }
 
