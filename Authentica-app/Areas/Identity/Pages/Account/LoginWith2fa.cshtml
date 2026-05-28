@@ -107,7 +107,7 @@
         <h2>Two-Factor Verification</h2>
         <p>Open your authenticator app and enter the 6-digit code for <strong>Authentica</strong>.</p>
 
-        @if (!ViewData.ModelState.IsValid)
+        @if (ViewData.ModelState.ErrorCount > 0)
         {
             <div class="validation-summary">
                 <ul>
@@ -119,10 +119,8 @@
             </div>
         }
 
-        <form method="post">
-            @Html.AntiForgeryToken()
-            <input type="hidden" asp-for="Input.TwoFactorCode" />
-
+        <form method="post" asp-page="/Account/LoginWith2fa" asp-area="Identity"
+              asp-route-rememberMe="@Model.RememberMe" asp-route-returnUrl="@Model.ReturnUrl">
             <div class="form-group">
                 <label asp-for="Input.TwoFactorCode">Authenticator code</label>
                 <input asp-for="Input.TwoFactorCode" type="text"

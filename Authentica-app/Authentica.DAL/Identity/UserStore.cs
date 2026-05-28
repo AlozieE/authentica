@@ -11,7 +11,8 @@ namespace Authentica.DAL.Identity
         IUserLockoutStore<IdentityUser>,
         IUserSecurityStampStore<IdentityUser>,
         IUserTwoFactorStore<IdentityUser>,
-        IUserPhoneNumberStore<IdentityUser>
+        IUserPhoneNumberStore<IdentityUser>,
+        IUserAuthenticatorKeyStore<IdentityUser>
     {
         private readonly DatabaseConnection _db;
 
@@ -254,6 +255,39 @@ namespace Authentica.DAL.Identity
 
         public Task SetPhoneNumberConfirmedAsync(IdentityUser user, bool confirmed, CancellationToken ct) =>
             Task.CompletedTask;
+
+        // ── IUserAuthenticatorKeyStore ────────────────────────────────────────────
+
+        public async Task SetAuthenticatorKeyAsync(IdentityUser user, string key, CancellationToken ct)
+        {
+            await using var conn = _db.CreateConnection();
+            await conn.OpenAsync(ct);
+
+            const string sql = """
+                UPDATE AspNetUsers
+                SET TwoFactorSecret = @Key
+                WHERE Id = @Id
+                """;
+
+            await using var cmd = new SqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@Key", (object?)key ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Id",  user.Id);
+            await cmd.ExecuteNonQueryAsync(ct);
+        }
+
+        public async Task<string?> GetAuthenticatorKeyAsync(IdentityUser user, CancellationToken ct)
+        {
+            await using var conn = _db.CreateConnection();
+            await conn.OpenAsync(ct);
+
+            const string sql = "SELECT TwoFactorSecret FROM AspNetUsers WHERE Id = @Id";
+
+            await using var cmd = new SqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@Id", user.Id);
+
+            var result = await cmd.ExecuteScalarAsync(ct);
+            return result is DBNull or null ? null : (string)result;
+        }
 
         // ── Helpers ───────────────────────────────────────────────────────────────
 

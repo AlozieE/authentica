@@ -123,7 +123,7 @@
     <p class="step-desc">Use Google Authenticator, Authy, or any TOTP app to scan this code.</p>
 
     <div id="qrcode-container">
-        <canvas id="qrcode"></canvas>
+        
     </div>
 
     <div class="step-label">Or enter manually</div>
@@ -157,13 +157,12 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="/js/qrcode.min.js"></script>
     <script>
-        QRCode.toCanvas(
-            document.getElementById('qrcode'),
-            '@Html.Raw(ViewBag.QrUri)',
-            { width: 200, margin: 1 },
-            function (err) { if (err) console.error(err); }
-        );
+        new QRCode(document.getElementById('qrcode-container'), {
+            text: '@Html.Raw(ViewBag.QrUri)',
+            width: 200,
+            height: 200
+        });
     </script>
 }
