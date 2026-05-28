@@ -33,7 +33,9 @@ namespace Authentica.BLL.Services
         {
             var secretBytes = Base32Encoding.ToBytes(plaintextSecret);
             var totp = new Totp(secretBytes);
-            return totp.VerifyTotp(code.Replace(" ", "").Replace("-", ""), out _, new VerificationWindow(1, 1));
+            var result = totp.VerifyTotp(code.Replace(" ", "").Replace("-", ""), out _, new VerificationWindow(1, 1));
+            Console.WriteLine($"[2FA DEBUG] ValidateCodeWithSecret: result={result}");
+            return result;
         }
 
         public async Task<bool> ValidateCodeAsync(string userId, string code)
@@ -43,6 +45,7 @@ namespace Authentica.BLL.Services
                 return false;
 
             var plaintextSecret = _encryption.Decrypt(encSecret, iv);
+            Console.WriteLine($"[2FA DEBUG] ValidateCodeAsync: plaintextSecret={plaintextSecret}, code={code}");
             return ValidateCodeWithSecret(plaintextSecret, code);
         }
 

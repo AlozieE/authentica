@@ -36,6 +36,12 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddAntiforgery(options =>
+{
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
+
 builder.Services.Configure<RazorViewEngineOptions>(options =>
 {
     options.ViewLocationFormats.Clear();
@@ -62,15 +68,15 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
+    app.UseHttpsRedirection();
 }
-
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseSession();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
