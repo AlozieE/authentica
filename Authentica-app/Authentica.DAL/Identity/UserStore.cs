@@ -10,7 +10,8 @@ namespace Authentica.DAL.Identity
         IUserEmailStore<IdentityUser>,
         IUserLockoutStore<IdentityUser>,
         IUserSecurityStampStore<IdentityUser>,
-        IUserTwoFactorStore<IdentityUser>
+        IUserTwoFactorStore<IdentityUser>,
+        IUserPhoneNumberStore<IdentityUser>
     {
         private readonly DatabaseConnection _db;
 
@@ -239,6 +240,20 @@ namespace Authentica.DAL.Identity
             user.TwoFactorEnabled = enabled;
             return Task.CompletedTask;
         }
+
+        // ── IUserPhoneNumberStore ─────────────────────────────────────────────────
+
+        public Task SetPhoneNumberAsync(IdentityUser user, string? phoneNumber, CancellationToken ct) =>
+            Task.CompletedTask;
+
+        public Task<string?> GetPhoneNumberAsync(IdentityUser user, CancellationToken ct) =>
+            Task.FromResult<string?>(null);
+
+        public Task<bool> GetPhoneNumberConfirmedAsync(IdentityUser user, CancellationToken ct) =>
+            Task.FromResult(false);
+
+        public Task SetPhoneNumberConfirmedAsync(IdentityUser user, bool confirmed, CancellationToken ct) =>
+            Task.CompletedTask;
 
         // ── Helpers ───────────────────────────────────────────────────────────────
 
