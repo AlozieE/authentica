@@ -92,10 +92,10 @@ namespace Authentica.DAL.Repositories
             cmd.Parameters.AddWithValue("@VaultId", vault.VaultId);
             cmd.Parameters.AddWithValue("@UserId", vault.UserId);
 
-            await cmd.ExecuteNonQueryAsync();
-            
-            if (rowsAffected == 0 )
-             throw new Exception("Vault niet gevonden of geen toegang");
+            int rowsAffected = await cmd.ExecuteNonQueryAsync();
+
+            if (rowsAffected == 0)
+                throw new Exception("Vault niet gevonden of geen toegang");
         }
 
         public async Task Delete(Vault vault)
