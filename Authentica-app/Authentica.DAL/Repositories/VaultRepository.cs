@@ -93,6 +93,9 @@ namespace Authentica.DAL.Repositories
             cmd.Parameters.AddWithValue("@UserId", vault.UserId);
 
             await cmd.ExecuteNonQueryAsync();
+            
+            if (rowsAffected == 0 )
+             throw new Exception("Vault niet gevonden of geen toegang");
         }
 
         public async Task Delete(Vault vault)
@@ -106,7 +109,10 @@ namespace Authentica.DAL.Repositories
             cmd.Parameters.AddWithValue("@VaultId", vault.VaultId);
             cmd.Parameters.AddWithValue("@UserId", vault.UserId);
 
-            await cmd.ExecuteNonQueryAsync();
+            int rowsAffected = await cmd.ExecuteNonQueryAsync();
+            
+            if (rowsAffected == 0)
+                throw new Exception("Vault niet gevonden of geen toegang");
         }
 
         private static Vault MapVault(SqlDataReader reader) => new()
