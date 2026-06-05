@@ -73,7 +73,11 @@ namespace Authentica.DAL.Repositories
             cmd.Parameters.AddWithValue("@CreatedAt", vault.CreatedAt);
             cmd.Parameters.AddWithValue("@UserId", vault.UserId);
 
-            vault.VaultId = (int)(await cmd.ExecuteScalarAsync())!;
+            var result = await cmd.ExecuteScalarAsync();
+            
+            if (result == null)
+                throw new Exception("Fout bij het aanmaken van de vault");
+            vault.VaultId = (int)result;
         }
 
         public async Task Update(Vault vault)
