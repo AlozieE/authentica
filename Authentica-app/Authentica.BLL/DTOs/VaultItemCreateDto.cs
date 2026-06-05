@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Authentica.DAL.Models;
 
-namespace Authentica_app.DTOs
+namespace Authentica.BLL.DTOs
 {
     public class VaultItemCreateDto
     {

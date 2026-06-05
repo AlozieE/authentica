@@ -1,4 +1,4 @@
-namespace Authentica_app.DTOs
+namespace Authentica.BLL.DTOs
 {
     public class VaultResponseDto
     {
