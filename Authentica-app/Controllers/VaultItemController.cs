@@ -64,24 +64,34 @@ namespace Authentica_app.Controllers
                 return View();
             }
 
-            var data = new Dictionary<string, string>();
-            foreach (var key in form.Keys)
+            try
             {
-                if (key != "__RequestVerificationToken")
-                    data[key] = form[key]!;
+                var data = new Dictionary<string, string>();
+                foreach (var key in form.Keys)
+                {
+                    if (key != "__RequestVerificationToken")
+                        data[key] = form[key]!;
+                }
+
+                var item = new VaultItem
+                {
+                    Title = dto.Title,
+                    ItemType = type,
+                    VaultId = vaultId,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+
+                await _vaultItemService.CreateItem(item, data);
+                return RedirectToAction(nameof(Index), new { type });
             }
-
-            var item = new VaultItem
+            catch (Exception)
             {
-                Title = dto.Title,
-                ItemType = type,
-                VaultId = vaultId,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-
-            await _vaultItemService.CreateItem(item, data);
-            return RedirectToAction(nameof(Index), new { type });
+                ModelState.AddModelError("", "Er is iets misgegaan bij het aanmaken van het item.");
+                ViewBag.Vault = vault;
+                ViewBag.ItemType = type;
+                return View();
+            }
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -116,17 +126,27 @@ namespace Authentica_app.Controllers
                 return View(item);
             }
 
-            var data = new Dictionary<string, string>();
-            foreach (var key in form.Keys)
+            try
             {
-                if (key != "__RequestVerificationToken")
-                    data[key] = form[key]!;
+                var data = new Dictionary<string, string>();
+                foreach (var key in form.Keys)
+                {
+                    if (key != "__RequestVerificationToken")
+                        data[key] = form[key]!;
+                }
+
+                item.Title = dto.Title;
+                await _vaultItemService.UpdateItem(item, data);
+                return RedirectToAction(nameof(Index), new { type = item.ItemType });
             }
-
-            item.Title = dto.Title;
-            await _vaultItemService.UpdateItem(item, data);
-
-            return RedirectToAction(nameof(Index), new { type = item.ItemType });
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "Er is iets misgegaan bij het bijwerken van het item.");
+                ViewBag.Data = _vaultItemService.DecryptItemData(item);
+                ViewBag.ItemType = item.ItemType;
+                ViewBag.Vault = item.Vault;
+                return View(item);
+            }
         }
 
         [HttpGet]
@@ -161,10 +181,16 @@ namespace Authentica_app.Controllers
             if (item == null || item.Vault.UserId != userId)
                 return NotFound();
 
-            var type = item.ItemType;
-            await _vaultItemService.DeleteItem(item);
-
-            return RedirectToAction(nameof(Index), new { type });
+            try
+            {
+                var type = item.ItemType;
+                await _vaultItemService.DeleteItem(item);
+                return RedirectToAction(nameof(Index), new { type });
+            }
+            catch (Exception)
+            {
+                return RedirectToAction(nameof(Index), new { type = item.ItemType });
+            }
         }
     }
 }

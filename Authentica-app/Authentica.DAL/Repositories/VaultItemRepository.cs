@@ -134,7 +134,10 @@ namespace Authentica.DAL.Repositories
             cmd.Parameters.AddWithValue("@UpdatedAt", item.UpdatedAt);
             cmd.Parameters.AddWithValue("@VaultItemId", item.VaultItemId);
 
-            await cmd.ExecuteNonQueryAsync();
+            int rowsAffected = await cmd.ExecuteNonQueryAsync();
+            
+            if (rowsAffected == 0)
+                throw new Exception("Fout bij het bijwerken van het vault item");
         }
 
         public async Task Delete(VaultItem item)
@@ -147,7 +150,10 @@ namespace Authentica.DAL.Repositories
             await using var cmd = new SqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@VaultItemId", item.VaultItemId);
 
-            await cmd.ExecuteNonQueryAsync();
+            int rowsAffected = await cmd.ExecuteNonQueryAsync();
+            
+            if (rowsAffected == 0)
+                throw new Exception("Fout bij het verwijderen van het vault item");
         }
 
         private static VaultItem MapVaultItem(SqlDataReader reader) => new()
