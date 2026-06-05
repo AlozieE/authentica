@@ -37,14 +37,21 @@ namespace Authentica_app.Controllers
         {
             if (ModelState.IsValid)
             {
-                var vault = new Vault
+                try
                 {
-                    Name = dto.Name,
-                    UserId = _userManager.GetUserId(User)!,
-                    CreatedAt = DateTime.UtcNow
-                };
-                await _vaultService.CreateVault(vault);
-                return RedirectToAction(nameof(Index));
+                    var vault = new Vault
+                    {
+                        Name = dto.Name,
+                        UserId = _userManager.GetUserId(User)!,
+                        CreatedAt = DateTime.UtcNow
+                    };
+                    await _vaultService.CreateVault(vault);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("", "Er is iets misgegaan bij het aanmaken van de vault.");
+                }
             }
             return View(dto);
         }
@@ -82,9 +89,16 @@ namespace Authentica_app.Controllers
 
             if (ModelState.IsValid)
             {
-                existingVault.Name = dto.Name;
-                await _vaultService.UpdateVault(existingVault);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    existingVault.Name = dto.Name;
+                    await _vaultService.UpdateVault(existingVault);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("", "Er is iets misgegaan bij het bijwerken van de vault.");
+                }
             }
             return View(dto);
         }
@@ -99,8 +113,15 @@ namespace Authentica_app.Controllers
             if (vault == null)
                 return NotFound();
 
-            await _vaultService.DeleteVault(vault);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _vaultService.DeleteVault(vault);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }
