@@ -1,4 +1,4 @@
-using Authentica_app.DTOs;
+using Authentica.BLL.DTOs;
 using Authentica.BLL.Interfaces;
 using Authentica.DAL.Models;
 using Authentica_app.Controllers;
