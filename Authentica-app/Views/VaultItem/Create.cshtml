@@ -28,7 +28,7 @@
                 <div class="mb-3">
                     <label class="form-label">Wachtwoord</label>
                     <div class="input-group">
-                        <input name="Password" id="passwordField" type="password" class="form-control" />
+                        <input name="Password" id="passwordField" type="password" class="form-control" required />
                         <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()" id="togglePasswordBtn" title="Toon/verberg wachtwoord">👁</button>
                         <input type="number" id="passwordLength" class="form-control" style="max-width: 80px;" value="16" min="8" max="64" title="Lengte" />
                         <button type="button" class="btn btn-outline-secondary" onclick="generatePassword()">Genereer</button>
@@ -66,22 +66,22 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Kaartnummer</label>
-                    <input name="CardNumber" class="form-control" placeholder="1234 5678 9012 3456" />
+                    <input name="CardNumber" class="form-control" placeholder="1234 5678 9012 3456" required />
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Vervaldatum</label>
-                    <input name="ExpiryDate" class="form-control" placeholder="MM/JJ" />
+                    <input name="ExpiryDate" class="form-control" placeholder="MM/JJ" required />
                 </div>
                 <div class="mb-3">
                     <label class="form-label">CVC</label>
-                    <input name="CVC" class="form-control" placeholder="123" />
+                    <input name="CVC" class="form-control" placeholder="123" required/>
                 </div>
             }
             else if (ViewBag.ItemType == Authentica.DAL.Models.VaultItemType.SecureNote)
             {
                 <div class="mb-3">
                     <label class="form-label">Inhoud</label>
-                    <textarea name="Content" class="form-control" rows="5"></textarea>
+                    <textarea name="Content" class="form-control" rows="5" required ></textarea>
                 </div>
             }
 

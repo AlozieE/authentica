@@ -29,7 +29,7 @@
                 <div class="mb-3">
                     <label class="form-label">Wachtwoord</label>
                     <div class="input-group mb-2">
-                        <input id="passwordField" name="Password" type="password" value="@ViewBag.Data?["Password"]" class="form-control" />
+                        <input id="passwordField" name="Password" type="password" value="@ViewBag.Data?["Password"]" class="form-control" required/>
                         <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility()">
                             <span id="eyeIcon">&#128065;</span>
                         </button>
@@ -48,22 +48,22 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Kaartnummer</label>
-                    <input name="CardNumber" value="@ViewBag.Data?["CardNumber"]" class="form-control" />
+                    <input name="CardNumber" value="@ViewBag.Data?["CardNumber"]" class="form-control" required />
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Vervaldatum</label>
-                    <input name="ExpiryDate" value="@ViewBag.Data?["ExpiryDate"]" class="form-control" />
+                    <input name="ExpiryDate" value="@ViewBag.Data?["ExpiryDate"]" class="form-control" required />
                 </div>
                 <div class="mb-3">
                     <label class="form-label">CVC</label>
-                    <input name="CVC" value="@ViewBag.Data?["CVC"]" class="form-control" />
+                    <input name="CVC" value="@ViewBag.Data?["CVC"]" class="form-control" required />
                 </div>
             }
             else if (ViewBag.ItemType == Authentica.DAL.Models.VaultItemType.SecureNote)
             {
                 <div class="mb-3">
                     <label class="form-label">Inhoud</label>
-                    <textarea name="Content" class="form-control" rows="5">@ViewBag.Data?["Content"]</textarea>
+                    <textarea name="Content" class="form-control" rows="5" required >@ViewBag.Data?["Content"]</textarea>
                 </div>
             }
 
