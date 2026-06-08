@@ -1,27 +1,26 @@
-using Authentica.BLL.Services;
-using Microsoft.Extensions.Configuration;
+using Authentica.BLL.Interfaces;
+using Moq;
 
 namespace Authentica_app.Tests;
 
 [TestClass]
 public class VaultItemServiceTests
 {
-    private const string TestKey = "X2CBejMWkOPJSWJ6JLDqa56qLo3/PFUdVD0KLrsm+lU=";
+    private Mock<IEncryptionService> _mockEncryption = null!;
 
-    private static EncryptionService CreateEncryptionService()
+    [TestInitialize]
+    public void Setup()
     {
-        var config = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?> { ["Encryption:Key"] = TestKey })
-            .Build();
-        return new EncryptionService(config);
+        _mockEncryption = new Mock<IEncryptionService>();
+        _mockEncryption.Setup(e => e.Encrypt(It.IsAny<string>())).Returns(("fake-ciphertext", "fake-iv"));
+        _mockEncryption.Setup(e => e.Decrypt("fake-ciphertext", "fake-iv")).Returns("my secret password");
+        _mockEncryption.Setup(e => e.GenerateIV()).Returns("fake-iv");
     }
 
     [TestMethod]
     public void Encrypt_ReturnsEncryptedData_DifferentFromInput()
     {
-        var service = CreateEncryptionService();
-
-        var (encryptedData, _) = service.Encrypt("my secret password");
+        var (encryptedData, _) = _mockEncryption.Object.Encrypt("my secret password");
 
         Assert.AreNotEqual("my secret password", encryptedData);
     }
@@ -29,11 +28,10 @@ public class VaultItemServiceTests
     [TestMethod]
     public void Decrypt_ReturnsOriginalData_AfterEncryption()
     {
-        var service = CreateEncryptionService();
         const string original = "my secret password";
 
-        var (encryptedData, iv) = service.Encrypt(original);
-        var decrypted = service.Decrypt(encryptedData, iv);
+        var (encryptedData, iv) = _mockEncryption.Object.Encrypt(original);
+        var decrypted = _mockEncryption.Object.Decrypt(encryptedData, iv);
 
         Assert.AreEqual(original, decrypted);
     }
@@ -41,10 +39,12 @@ public class VaultItemServiceTests
     [TestMethod]
     public void Encrypt_GeneratesUniqueIV_ForEachItem()
     {
-        var service = CreateEncryptionService();
+        _mockEncryption.SetupSequence(e => e.Encrypt(It.IsAny<string>()))
+            .Returns(("fake-ciphertext-1", "fake-iv-1"))
+            .Returns(("fake-ciphertext-2", "fake-iv-2"));
 
-        var (_, iv1) = service.Encrypt("same password");
-        var (_, iv2) = service.Encrypt("same password");
+        var (_, iv1) = _mockEncryption.Object.Encrypt("same password");
+        var (_, iv2) = _mockEncryption.Object.Encrypt("same password");
 
         Assert.AreNotEqual(iv1, iv2);
     }

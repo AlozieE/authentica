@@ -1,8 +1,8 @@
 using Authentica.BLL.DTOs;
+using Authentica.BLL.Interfaces;
 using Authentica.BLL.Services;
 using Authentica.DAL.Interfaces;
 using Authentica.DAL.Models;
-using Microsoft.Extensions.Configuration;
 using Moq;
 
 namespace Authentica_app.Tests;
@@ -10,9 +10,8 @@ namespace Authentica_app.Tests;
 [TestClass]
 public class VaultItemServiceTests_Mocked
 {
-    private const string TestKey = "X2CBejMWkOPJSWJ6JLDqa56qLo3/PFUdVD0KLrsm+lU=";
-
     private Mock<IVaultItemRepository> _mockRepo = null!;
+    private Mock<IEncryptionService> _mockEncryption = null!;
     private VaultItemService _service = null!;
 
     [TestInitialize]
@@ -20,12 +19,12 @@ public class VaultItemServiceTests_Mocked
     {
         _mockRepo = new Mock<IVaultItemRepository>();
 
-        var config = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?> { ["Encryption:Key"] = TestKey })
-            .Build();
-        var encryptionService = new EncryptionService(config);
+        _mockEncryption = new Mock<IEncryptionService>();
+        _mockEncryption.Setup(e => e.Encrypt(It.IsAny<string>())).Returns(("fake-ciphertext", "fake-iv"));
+        _mockEncryption.Setup(e => e.Decrypt(It.IsAny<string>(), It.IsAny<string>())).Returns("original-plaintext");
+        _mockEncryption.Setup(e => e.GenerateIV()).Returns("fake-iv");
 
-        _service = new VaultItemService(_mockRepo.Object, encryptionService);
+        _service = new VaultItemService(_mockRepo.Object, _mockEncryption.Object);
     }
 
     [TestMethod]
