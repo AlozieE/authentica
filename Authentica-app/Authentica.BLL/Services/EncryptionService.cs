@@ -1,10 +1,11 @@
+using Authentica.BLL.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace Authentica.BLL.Services
 {
-    public class EncryptionService
+    public class EncryptionService : IEncryptionService
     {
         private readonly byte[] _key;
 
@@ -39,6 +40,13 @@ namespace Authentica.BLL.Services
             var plainBytes = decryptor.TransformFinalBlock(encryptedBytes, 0, encryptedBytes.Length);
 
             return Encoding.UTF8.GetString(plainBytes);
+        }
+
+        public string GenerateIV()
+        {
+            using var aes = Aes.Create();
+            aes.GenerateIV();
+            return Convert.ToBase64String(aes.IV);
         }
     }
 }

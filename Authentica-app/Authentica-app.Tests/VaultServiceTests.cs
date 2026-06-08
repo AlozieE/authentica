@@ -1,6 +1,7 @@
-using Authentica.DAL.Models;
+using Authentica.BLL.DTOs;
 using Authentica.BLL.Services;
 using Authentica.DAL.Interfaces;
+using Authentica.DAL.Models;
 using Moq;
 
 namespace Authentica_app.Tests;
@@ -37,12 +38,12 @@ public class VaultServiceTests
     [TestMethod]
     public async Task CreateVault_CallsRepositoryAdd()
     {
-        var vault = new Vault { VaultId = 1, Name = "Savings", UserId = "user1" };
-        _mockRepo.Setup(r => r.Add(vault)).Returns(Task.CompletedTask);
+        var dto = new VaultCreateDto { Name = "Savings" };
+        _mockRepo.Setup(r => r.Add(It.IsAny<Vault>())).Returns(Task.CompletedTask);
 
-        await _service.CreateVault(vault);
+        await _service.CreateVault("user1", dto);
 
-        _mockRepo.Verify(r => r.Add(vault), Times.Once);
+        _mockRepo.Verify(r => r.Add(It.Is<Vault>(v => v.Name == "Savings" && v.UserId == "user1")), Times.Once);
     }
 
     [TestMethod]

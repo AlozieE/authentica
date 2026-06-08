@@ -9,5 +9,6 @@ namespace Authentica.BLL.DTOs
         [StringLength(255)]
         public string Title { get; set; } = string.Empty;
         public VaultItemType ItemType { get; set; }
+        public Dictionary<string, string> Fields { get; set; } = new();
     }
 }

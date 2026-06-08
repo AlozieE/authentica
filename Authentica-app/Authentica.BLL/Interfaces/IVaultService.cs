@@ -1,3 +1,4 @@
+using Authentica.BLL.DTOs;
 using Authentica.DAL.Models;
 
 namespace Authentica.BLL.Interfaces
@@ -6,7 +7,7 @@ namespace Authentica.BLL.Interfaces
     {
         Task<List<Vault>> GetUserVaults(string userId);
         Task<Vault?> GetById(int id, string userId);
-        Task CreateVault(Vault vault);
+        Task CreateVault(string userId, VaultCreateDto dto);
         Task UpdateVault(Vault vault);
         Task DeleteVault(Vault vault);
     }

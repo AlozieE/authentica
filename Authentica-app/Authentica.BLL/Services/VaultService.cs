@@ -1,3 +1,4 @@
+using Authentica.BLL.DTOs;
 using Authentica.BLL.Interfaces;
 using Authentica.DAL.Models;
 using Authentica.DAL.Interfaces;
@@ -19,8 +20,16 @@ namespace Authentica.BLL.Services
         public async Task<Vault?> GetById(int id, string userId)
             => await _vaultRepository.GetById(id, userId);
 
-        public async Task CreateVault(Vault vault)
-            => await _vaultRepository.Add(vault);
+        public async Task CreateVault(string userId, VaultCreateDto dto)
+        {
+            var vault = new Vault
+            {
+                Name = dto.Name,
+                UserId = userId,
+                CreatedAt = DateTime.UtcNow
+            };
+            await _vaultRepository.Add(vault);
+        }
 
         public async Task UpdateVault(Vault vault)
             => await _vaultRepository.Update(vault);

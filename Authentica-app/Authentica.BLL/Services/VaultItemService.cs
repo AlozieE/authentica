@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Authentica.BLL.DTOs;
 using Authentica.BLL.Interfaces;
 using Authentica.DAL.Models;
 using Authentica.DAL.Interfaces;
@@ -8,9 +9,9 @@ namespace Authentica.BLL.Services
     public class VaultItemService : IVaultItemService
     {
         private readonly IVaultItemRepository _vaultItemRepository;
-        private readonly EncryptionService _encryptionService;
+        private readonly IEncryptionService _encryptionService;
 
-        public VaultItemService(IVaultItemRepository vaultItemRepository, EncryptionService encryptionService)
+        public VaultItemService(IVaultItemRepository vaultItemRepository, IEncryptionService encryptionService)
         {
             _vaultItemRepository = vaultItemRepository;
             _encryptionService = encryptionService;
@@ -25,9 +26,17 @@ namespace Authentica.BLL.Services
         public async Task<VaultItem?> GetById(int id)
             => await _vaultItemRepository.GetById(id);
 
-        public async Task CreateItem(VaultItem item, Dictionary<string, string> data)
+        public async Task CreateItem(int vaultId, string userId, VaultItemCreateDto dto)
         {
-            var json = JsonSerializer.Serialize(data);
+            var item = new VaultItem
+            {
+                Title = dto.Title,
+                ItemType = dto.ItemType,
+                VaultId = vaultId,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            var json = JsonSerializer.Serialize(dto.Fields);
             (item.EncryptedData, item.IV) = _encryptionService.Encrypt(json);
             await _vaultItemRepository.Add(item);
         }

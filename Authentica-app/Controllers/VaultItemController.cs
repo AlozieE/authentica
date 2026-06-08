@@ -66,23 +66,14 @@ namespace Authentica_app.Controllers
 
             try
             {
-                var data = new Dictionary<string, string>();
+                dto.ItemType = type;
                 foreach (var key in form.Keys)
                 {
                     if (key != "__RequestVerificationToken")
-                        data[key] = form[key]!;
+                        dto.Fields[key] = form[key]!;
                 }
 
-                var item = new VaultItem
-                {
-                    Title = dto.Title,
-                    ItemType = type,
-                    VaultId = vaultId,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
-                };
-
-                await _vaultItemService.CreateItem(item, data);
+                await _vaultItemService.CreateItem(vaultId, userId, dto);
                 return RedirectToAction(nameof(Index), new { type });
             }
             catch (Exception)

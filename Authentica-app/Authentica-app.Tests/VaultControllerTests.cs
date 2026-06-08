@@ -63,12 +63,11 @@ public class VaultControllerTests
     public async Task Create_AddsVaultForCurrentUser()
     {
         var dto = new VaultCreateDto { Name = "Nieuwe Vault" };
-        _mockVaultService.Setup(s => s.CreateVault(It.IsAny<Vault>())).Returns(Task.CompletedTask);
+        _mockVaultService.Setup(s => s.CreateVault(UserId, It.IsAny<VaultCreateDto>())).Returns(Task.CompletedTask);
 
         await _controller.Create(dto);
 
-        
-        _mockVaultService.Verify(s => s.CreateVault(It.Is<Vault>(v => v.UserId == UserId)), Times.Once);
+        _mockVaultService.Verify(s => s.CreateVault(UserId, It.IsAny<VaultCreateDto>()), Times.Once);
     }
 
     [TestMethod]

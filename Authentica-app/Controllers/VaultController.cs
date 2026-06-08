@@ -39,13 +39,8 @@ namespace Authentica_app.Controllers
             {
                 try
                 {
-                    var vault = new Vault
-                    {
-                        Name = dto.Name,
-                        UserId = _userManager.GetUserId(User)!,
-                        CreatedAt = DateTime.UtcNow
-                    };
-                    await _vaultService.CreateVault(vault);
+                    var userId = _userManager.GetUserId(User)!;
+                    await _vaultService.CreateVault(userId, dto);
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception)

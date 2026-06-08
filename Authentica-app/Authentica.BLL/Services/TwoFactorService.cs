@@ -7,10 +7,10 @@ namespace Authentica.BLL.Services
     public class TwoFactorService : ITwoFactorService
     {
         private readonly ITwoFactorRepository _repository;
-        private readonly EncryptionService _encryption;
+        private readonly IEncryptionService _encryption;
         private const string Issuer = "Authentica";
 
-        public TwoFactorService(ITwoFactorRepository repository, EncryptionService encryption)
+        public TwoFactorService(ITwoFactorRepository repository, IEncryptionService encryption)
         {
             _repository = repository;
             _encryption = encryption;

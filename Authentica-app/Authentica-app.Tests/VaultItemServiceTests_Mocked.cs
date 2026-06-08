@@ -1,6 +1,7 @@
-using Authentica.DAL.Models;
+using Authentica.BLL.DTOs;
 using Authentica.BLL.Services;
 using Authentica.DAL.Interfaces;
+using Authentica.DAL.Models;
 using Microsoft.Extensions.Configuration;
 using Moq;
 
@@ -46,18 +47,15 @@ public class VaultItemServiceTests_Mocked
     [TestMethod]
     public async Task CreateItem_CallsRepositoryAdd()
     {
-        var item = new VaultItem
+        var dto = new VaultItemCreateDto
         {
             Title = "Test Item",
-            VaultId = 1,
             ItemType = VaultItemType.Password,
-            EncryptedData = "",
-            IV = ""
+            Fields = new Dictionary<string, string> { ["username"] = "user", ["password"] = "pass" }
         };
-        var data = new Dictionary<string, string> { ["username"] = "user", ["password"] = "pass" };
         _mockRepo.Setup(r => r.Add(It.IsAny<VaultItem>())).Returns(Task.CompletedTask);
 
-        await _service.CreateItem(item, data);
+        await _service.CreateItem(1, "user1", dto);
 
         _mockRepo.Verify(r => r.Add(It.IsAny<VaultItem>()), Times.Once);
     }
