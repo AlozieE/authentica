@@ -17,37 +17,43 @@ namespace Authentica_app.Controllers
             _userManager = userManager;
         }
 
-        // UC11 – Show 2FA management overview
+        // Toont het adminpanel voor twofactor authentication met de huidige instellingen van de user.
         public async Task<IActionResult> Manage()
         {
+            // Haal de ingelogde user op om te controleren of 2FA al is ingeschakeld.
             var user = await _userManager.GetUserAsync(User);
             ViewBag.TwoFactorEnabled = user!.TwoFactorEnabled;
+
             if (TempData["SuccessMessage"] is string msg)
                 ViewBag.SuccessMessage = msg;
             return View();
         }
 
-        // UC11 – Step 1: show secret + QR code
+        // Toont de QR-code en het geheime sleutel zodat de user een authenticato -app kan koppelen.
         [HttpGet]
         public async Task<IActionResult> Setup()
         {
             var user = await _userManager.GetUserAsync(User);
+
+            // Stuur door naar het adminpaneel als 2FA al actief is, opnieuw instellen is niet nodig.
             if (user!.TwoFactorEnabled)
                 return RedirectToAction(nameof(Manage));
 
+            // Genereer een nieuw secret en maak de QR-URI aan die de authenticator-app kan inlezen.
             var secret = _twoFactorService.GenerateSecret();
             ViewBag.Secret = secret;
             ViewBag.QrUri  = _twoFactorService.GetSetupUri(user.Email!, secret);
             return View();
         }
 
-        // UC11 – Step 2: verify code then enable
+        // Verifieert de ingevoerde code en schakelt 2FA in als de code overeenkomt met de secret.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Setup(string code, string secret)
         {
             var user = await _userManager.GetUserAsync(User);
 
+            // Toon het formulier opnieuw met een foutmelding als de verificatiecode onjuist is.
             if (!_twoFactorService.ValidateCodeWithSecret(secret, code))
             {
                 ModelState.AddModelError(nameof(code), "Invalid verification code. Please try again.");
@@ -56,6 +62,7 @@ namespace Authentica_app.Controllers
                 return View();
             }
 
+            // Sla de secret op in de database en zet de 2FA flag aan voor de user.
             await _twoFactorService.SaveSecretAsync(user!.Id, secret);
             user.TwoFactorEnabled = true;
             await _userManager.UpdateAsync(user);
@@ -64,12 +71,14 @@ namespace Authentica_app.Controllers
             return RedirectToAction(nameof(Manage));
         }
 
-        // UC11 – Disable 2FA
+        // Schakelt twofactorauthentication uit en verwijdert het opgeslagen secret van de user.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Disable()
         {
             var user = await _userManager.GetUserAsync(User);
+
+            // Zet de 2FA flag uit en verwijder de secret, zodat de user niet langer wordt gevraagd om een code.
             user!.TwoFactorEnabled = false;
             await _userManager.UpdateAsync(user);
             await _twoFactorService.ClearSecretAsync(user.Id);
