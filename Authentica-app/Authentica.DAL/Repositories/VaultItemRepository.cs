@@ -92,6 +92,7 @@ namespace Authentica.DAL.Repositories
 
         public async Task Add(VaultItem item)
         {
+        try {
             await using var conn = _db.CreateConnection();
             await conn.OpenAsync();
 
@@ -111,6 +112,11 @@ namespace Authentica.DAL.Repositories
             cmd.Parameters.AddWithValue("@VaultId", item.VaultId);
 
             item.VaultItemId = (int)(await cmd.ExecuteScalarAsync())!;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Fout bij het toevoegen van het vault item", ex);
+            }
         }
 
         public async Task Update(VaultItem item)
