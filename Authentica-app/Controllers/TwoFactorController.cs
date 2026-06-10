@@ -26,10 +26,14 @@ namespace Authentica_app.Controllers
 
             if (TempData["SuccessMessage"] is string msg)
                 ViewBag.SuccessMessage = msg;
+
+            if (TempData["ErrorMessage"] is string err)
+                ViewBag.ErrorMessage = err;
+
             return View();
         }
 
-        // Toont de QR-code en het geheime sleutel zodat de user een authenticato -app kan koppelen.
+        // Toont de QR-code en de secret key zodat de user een authenticator-app kan koppelen.
         [HttpGet]
         public async Task<IActionResult> Setup()
         {
@@ -62,13 +66,22 @@ namespace Authentica_app.Controllers
                 return View();
             }
 
-            // Sla de secret op in de database en zet de 2FA flag aan voor de user.
-            await _twoFactorService.SaveSecretAsync(user!.Id, secret);
-            user.TwoFactorEnabled = true;
-            await _userManager.UpdateAsync(user);
+            try
+            {
+                // Sla de secret op in de database en zet de 2FA flag aan voor de user.
+                await _twoFactorService.SaveSecretAsync(user!.Id, secret);
+                user.TwoFactorEnabled = true;
+                await _userManager.UpdateAsync(user);
 
-            TempData["SuccessMessage"] = "Two-factor authentication is now enabled.";
-            return RedirectToAction(nameof(Manage));
+                TempData["SuccessMessage"] = "Two-factor authentication is now enabled.";
+                return RedirectToAction(nameof(Manage));
+            }
+            catch (Exception)
+            {
+                // Toon een foutmelding als het inschakelen van 2FA mislukt.
+                TempData["ErrorMessage"] = "Er is iets misgegaan bij het inschakelen van 2FA.";
+                return RedirectToAction(nameof(Manage));
+            }
         }
 
         // Schakelt twofactorauthentication uit en verwijdert het opgeslagen secret van de user.
@@ -78,13 +91,22 @@ namespace Authentica_app.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
 
-            // Zet de 2FA flag uit en verwijder de secret, zodat de user niet langer wordt gevraagd om een code.
-            user!.TwoFactorEnabled = false;
-            await _userManager.UpdateAsync(user);
-            await _twoFactorService.ClearSecretAsync(user.Id);
+            try
+            {
+                // Zet de 2FA flag uit en verwijder de secret, zodat de user niet langer wordt gevraagd om een code.
+                user!.TwoFactorEnabled = false;
+                await _userManager.UpdateAsync(user);
+                await _twoFactorService.ClearSecretAsync(user.Id);
 
-            TempData["SuccessMessage"] = "Two-factor authentication has been disabled.";
-            return RedirectToAction(nameof(Manage));
+                TempData["SuccessMessage"] = "Two-factor authentication has been disabled.";
+                return RedirectToAction(nameof(Manage));
+            }
+            catch (Exception)
+            {
+                // Toon een foutmelding als het uitschakelen van 2FA mislukt.
+                TempData["ErrorMessage"] = "Er is iets misgegaan bij het uitschakelen van 2FA.";
+                return RedirectToAction(nameof(Manage));
+            }
         }
     }
 }
