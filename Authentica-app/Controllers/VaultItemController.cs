@@ -78,7 +78,6 @@ namespace Authentica_app.Controllers
 
             try
             {
-                // Stel het itemtype in op het DTO zodat de service weet welk type item aangemaakt wordt.
                 dto.ItemType = type;
 
                 // Verwerk alle formuliervelden als dynamische gegevens, behalve het CSRF token.
@@ -94,7 +93,7 @@ namespace Authentica_app.Controllers
             }
             catch (Exception)
             {
-                // Toon een algemene foutmelding als het aanmaken mislukt door een onverwachte fout.
+                // Toon een foutmelding als het aanmaken mislukt door een onverwachte fout.
                 ModelState.AddModelError("", "Er is iets misgegaan bij het aanmaken van het item.");
                 ViewBag.Vault = vault;
                 ViewBag.ItemType = type;
@@ -158,7 +157,7 @@ namespace Authentica_app.Controllers
             }
             catch (Exception)
             {
-                // Toon een algemene foutmelding als het bijwerken mislukt door een onverwachte fout.
+                // Toon een foutmelding als het bijwerken mislukt door een onverwachte fout.
                 ModelState.AddModelError("", "Er is iets misgegaan bij het bijwerken van het item.");
                 ViewBag.Data = _vaultItemService.DecryptItemData(item);
                 ViewBag.ItemType = item.ItemType;
@@ -167,7 +166,7 @@ namespace Authentica_app.Controllers
             }
         }
 
-        // Geeft de ontsleutelde waarde van een vault item terug als JSON, bedoeld voor gebruik via JavaScript (bijv. kopiëren naar klembord).
+        // Geeft de ontsleutelde waarde van een vault item terug als JSON, bedoeld voor gebruik via JavaScript bijoorbeeld kopiëren naar klembord.
         [HttpGet]
         public async Task<IActionResult> GetDecryptedValue(int id)
         {

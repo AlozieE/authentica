@@ -109,7 +109,7 @@ namespace Authentica_app.Controllers
                 }
                 catch (Exception)
                 {
-                    // Toon een algemene foutmelding als het bijwerken mislukt door een onverwachte fout.
+                    // Toon een foutmelding als het bijwerken mislukt door een onverwachte fout.
                     ModelState.AddModelError("", "Er is iets misgegaan bij het bijwerken van de vault.");
                 }
             }
@@ -121,7 +121,7 @@ namespace Authentica_app.Controllers
         // Verwijdert een vault na verificatie dat de vault aan de ingelogde user toebehoort.
         public async Task<IActionResult> Delete(int id)
         {
-            // Haal de vault op en controleer eigenaarschap om te voorkomen dat iemand andermans vaults verwijdert.
+            // Haal de vault op en controleer ownership om te voorkomen dat iemand andermans vaults verwijdert.
             var userId = _userManager.GetUserId(User)!;
             var vault = await _vaultService.GetById(id, userId);
 
