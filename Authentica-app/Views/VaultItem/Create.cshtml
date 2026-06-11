@@ -15,7 +15,7 @@
                 <input name="Title" class="form-control" required />
             </div>
 
-            @if (ViewBag.ItemType == Authentica.DAL.Models.VaultItemType.Password)
+            @if (ViewBag.ItemType == Authentica.BLL.Models.VaultItemType.Password)
             {
                 <div class="mb-3">
                     <label class="form-label">Website</label>
@@ -58,7 +58,7 @@
                     }
                 </script>
             }
-            else if (ViewBag.ItemType == Authentica.DAL.Models.VaultItemType.CreditCard)
+            else if (ViewBag.ItemType == Authentica.BLL.Models.VaultItemType.CreditCard)
             {
                 <div class="mb-3">
                     <label class="form-label">Kaarthouder</label>
@@ -77,7 +77,7 @@
                     <input name="CVC" class="form-control" placeholder="123" required/>
                 </div>
             }
-            else if (ViewBag.ItemType == Authentica.DAL.Models.VaultItemType.SecureNote)
+            else if (ViewBag.ItemType == Authentica.BLL.Models.VaultItemType.SecureNote)
             {
                 <div class="mb-3">
                     <label class="form-label">Inhoud</label>

@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Authentica.DAL.Models;
+using Authentica.BLL.Models;
 
 namespace Authentica.BLL.DTOs
 {

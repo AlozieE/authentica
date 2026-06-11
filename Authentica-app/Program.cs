@@ -2,7 +2,6 @@ using Authentica.BLL.Interfaces;
 using Authentica.BLL.Services;
 using Authentica.DAL.Database;
 using Authentica.DAL.Identity;
-using Authentica.DAL.Interfaces;
 using Authentica.DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;

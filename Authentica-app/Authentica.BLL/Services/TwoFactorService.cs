@@ -1,5 +1,4 @@
 using Authentica.BLL.Interfaces;
-using Authentica.DAL.Interfaces;
 using OtpNet;
 
 namespace Authentica.BLL.Services

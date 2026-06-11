@@ -1,5 +1,5 @@
 using Authentica.BLL.DTOs;
-using Authentica.DAL.Models;
+using Authentica.BLL.Models;
 
 namespace Authentica.BLL.Interfaces
 {

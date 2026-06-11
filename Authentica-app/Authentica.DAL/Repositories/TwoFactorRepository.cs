@@ -1,5 +1,5 @@
 using Authentica.DAL.Database;
-using Authentica.DAL.Interfaces;
+using Authentica.BLL.Interfaces;
 using Microsoft.Data.SqlClient;
 
 namespace Authentica.DAL.Repositories

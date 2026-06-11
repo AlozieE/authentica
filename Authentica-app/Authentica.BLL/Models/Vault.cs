@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace Authentica.DAL.Models
+namespace Authentica.BLL.Models
 {
     public class Vault
     {

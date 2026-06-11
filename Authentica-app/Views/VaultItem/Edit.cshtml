@@ -1,4 +1,4 @@
-@model Authentica.DAL.Models.VaultItem
+@model Authentica.BLL.Models.VaultItem
 @{ ViewData["Title"] = "Bewerken"; }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -16,7 +16,7 @@
                 <input name="Title" value="@Model.Title" class="form-control" required />
             </div>
 
-            @if (ViewBag.ItemType == Authentica.DAL.Models.VaultItemType.Password)
+            @if (ViewBag.ItemType == Authentica.BLL.Models.VaultItemType.Password)
             {
                 <div class="mb-3">
                     <label class="form-label">Website</label>
@@ -40,7 +40,7 @@
                     </div>
                 </div>
             }
-            else if (ViewBag.ItemType == Authentica.DAL.Models.VaultItemType.CreditCard)
+            else if (ViewBag.ItemType == Authentica.BLL.Models.VaultItemType.CreditCard)
             {
                 <div class="mb-3">
                     <label class="form-label">Kaarthouder</label>
@@ -59,7 +59,7 @@
                     <input name="CVC" value="@ViewBag.Data?["CVC"]" class="form-control" required />
                 </div>
             }
-            else if (ViewBag.ItemType == Authentica.DAL.Models.VaultItemType.SecureNote)
+            else if (ViewBag.ItemType == Authentica.BLL.Models.VaultItemType.SecureNote)
             {
                 <div class="mb-3">
                     <label class="form-label">Inhoud</label>
@@ -75,7 +75,7 @@
     </div>
 </div>
 
-@if (ViewBag.ItemType == Authentica.DAL.Models.VaultItemType.Password)
+@if (ViewBag.ItemType == Authentica.BLL.Models.VaultItemType.Password)
 {
     <script>
         function generatePassword() {

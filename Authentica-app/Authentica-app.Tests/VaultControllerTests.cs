@@ -1,6 +1,6 @@
 using Authentica.BLL.DTOs;
 using Authentica.BLL.Interfaces;
-using Authentica.DAL.Models;
+using Authentica.BLL.Models;
 using Authentica_app.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

@@ -1,6 +1,6 @@
-using Authentica.DAL.Models;
+using Authentica.BLL.Models;
 
-namespace Authentica.DAL.Interfaces
+namespace Authentica.BLL.Interfaces
 {
     public interface IVaultItemRepository
     {

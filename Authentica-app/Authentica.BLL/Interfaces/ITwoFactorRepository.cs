@@ -1,4 +1,4 @@
-namespace Authentica.DAL.Interfaces
+namespace Authentica.BLL.Interfaces
 {
     public interface ITwoFactorRepository
     {

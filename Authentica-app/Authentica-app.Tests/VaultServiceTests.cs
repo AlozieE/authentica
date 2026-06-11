@@ -1,7 +1,7 @@
 using Authentica.BLL.DTOs;
 using Authentica.BLL.Services;
-using Authentica.DAL.Interfaces;
-using Authentica.DAL.Models;
+using Authentica.BLL.Interfaces;
+using Authentica.BLL.Models;
 using Moq;
 
 namespace Authentica_app.Tests;
