@@ -1,4 +1,4 @@
-namespace Authentica.DAL.Models
+namespace Authentica_app.Models
 {
     public class ErrorViewModel
     {

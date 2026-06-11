@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using Authentica.DAL.Models;
+using Authentica_app.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Authentica_app.Controllers
