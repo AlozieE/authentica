@@ -18,7 +18,6 @@ namespace Authentica.BLL.Services
 
             var result = new char[length];
 
-            // Guarantee at least one character from each required category.
             result[0] = Pick(Uppercase);
             result[1] = Pick(Lowercase);
             result[2] = Pick(Digits);
@@ -27,7 +26,6 @@ namespace Authentica.BLL.Services
             for (int i = 4; i < length; i++)
                 result[i] = Pick(AllChars);
 
-            // Shuffle with Fisher-Yates so the guaranteed characters aren't always at positions 0-3.
             for (int i = length - 1; i > 0; i--)
             {
                 int j = RandomNumberGenerator.GetInt32(i + 1);

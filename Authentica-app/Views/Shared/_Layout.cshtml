@@ -229,8 +229,8 @@
         </nav>
 
         <div class="sidebar-bottom">
-            <a asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
-            <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Change Password</a>
+            <a asp-controller="Account" asp-action="ChangeEmail">Profile</a>
+            <a asp-controller="Account" asp-action="ChangePassword">Change Password</a>
             <a asp-controller="TwoFactor" asp-action="Manage">Two-Factor Auth</a>
         </div>
     </div>

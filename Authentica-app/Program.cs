@@ -65,6 +65,7 @@ builder.Services.AddScoped<IPasswordGeneratorService, PasswordGeneratorService>(
 builder.Services.AddScoped<IVaultService, VaultService>();
 builder.Services.AddScoped<IVaultItemService, VaultItemService>();
 builder.Services.AddScoped<ITwoFactorService, TwoFactorService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 var app = builder.Build();
 
