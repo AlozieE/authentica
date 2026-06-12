@@ -13,15 +13,18 @@ namespace Authentica_app.Controllers
         private readonly IVaultItemService _vaultItemService;
         private readonly IVaultService _vaultService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IPasswordGeneratorService _passwordGenerator;
 
         public VaultItemController(
             IVaultItemService vaultItemService,
             IVaultService vaultService,
-            UserManager<IdentityUser> userManager)
+            UserManager<IdentityUser> userManager,
+            IPasswordGeneratorService passwordGenerator)
         {
             _vaultItemService = vaultItemService;
             _vaultService = vaultService;
             _userManager = userManager;
+            _passwordGenerator = passwordGenerator;
         }
 
         // Toont een overzicht van alle vault items van het opgegeven type.
@@ -190,6 +193,16 @@ namespace Authentica_app.Controllers
             };
 
             return Json(new { value });
+        }
+
+        [HttpGet]
+        public IActionResult GeneratePassword(int length = 16)
+        {
+            if (length < 8 || length > 128)
+                return BadRequest(new { error = "Length must be between 8 and 128." });
+
+            var password = _passwordGenerator.Generate(length);
+            return Json(new { password });
         }
 
         [HttpPost]

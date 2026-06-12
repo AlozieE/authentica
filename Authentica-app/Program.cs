@@ -61,6 +61,7 @@ builder.Services.AddScoped<IVaultRepository, VaultRepository>();
 builder.Services.AddScoped<IVaultItemRepository, VaultItemRepository>();
 builder.Services.AddScoped<ITwoFactorRepository, TwoFactorRepository>();
 builder.Services.AddScoped<IEncryptionService, EncryptionService>();
+builder.Services.AddScoped<IPasswordGeneratorService, PasswordGeneratorService>();
 builder.Services.AddScoped<IVaultService, VaultService>();
 builder.Services.AddScoped<IVaultItemService, VaultItemService>();
 builder.Services.AddScoped<ITwoFactorService, TwoFactorService>();
