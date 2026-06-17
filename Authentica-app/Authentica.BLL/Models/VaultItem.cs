@@ -2,13 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Authentica.BLL.Models
 {
-    public enum VaultItemType
-    {
-        Password,
-        CreditCard,
-        SecureNote
-    }
-
     public class VaultItem
     {
         public int VaultItemId { get; set; }
@@ -18,7 +11,7 @@ namespace Authentica.BLL.Models
         public string Title { get; set; } = string.Empty;
 
         [Required]
-        public VaultItemType ItemType { get; set; }
+        public int VaultItemTypeId { get; set; }
 
         [Required]
         public string EncryptedData { get; set; } = string.Empty;

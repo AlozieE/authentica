@@ -5,7 +5,7 @@ namespace Authentica.BLL.Interfaces
 {
     public interface IVaultItemService
     {
-        Task<List<VaultItem>> GetItems(string userId, VaultItemType type, int? vaultId);
+        Task<List<VaultItem>> GetItems(string userId, int vaultItemTypeId, int? vaultId);
         Task<List<VaultItem>> GetItems(int vaultId);
         Task<VaultItem?> GetById(int id);
         Task CreateItem(int vaultId, string userId, VaultItemCreateDto dto);

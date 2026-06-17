@@ -61,7 +61,7 @@ public class VaultItemServiceTests
         var dto = new VaultItemCreateDto
         {
             Title = "Test Item",
-            ItemType = VaultItemType.Password,
+            VaultItemTypeId = 1,
             Fields = new Dictionary<string, string> { ["username"] = "user", ["password"] = "pass" }
         };
         _mockRepo.Setup(r => r.Add(It.IsAny<VaultItem>())).Returns(Task.CompletedTask);

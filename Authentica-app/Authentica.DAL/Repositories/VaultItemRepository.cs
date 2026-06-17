@@ -22,7 +22,7 @@ namespace Authentica.DAL.Repositories
             await conn.OpenAsync();
 
             const string sql = """
-                SELECT VaultItemId, Title, ItemType, EncryptedData, IV, CreatedAt, UpdatedAt, VaultId
+                SELECT VaultItemId, Title, VaultItemTypeId, EncryptedData, IV, CreatedAt, UpdatedAt, VaultId
                 FROM VaultItems
                 WHERE VaultId = @VaultId
                 ORDER BY CreatedAt DESC
@@ -38,7 +38,7 @@ namespace Authentica.DAL.Repositories
             return items;
         }
 
-        public async Task<List<VaultItem>> GetByUserAndType(string userId, VaultItemType type, int? vaultId)
+        public async Task<List<VaultItem>> GetByUserAndType(string userId, int vaultItemTypeId, int? vaultId)
         {
             var items = new List<VaultItem>();
 
@@ -46,20 +46,20 @@ namespace Authentica.DAL.Repositories
             await conn.OpenAsync();
 
             const string sql = """
-                SELECT vi.VaultItemId, vi.Title, vi.ItemType, vi.EncryptedData, vi.IV,
+                SELECT vi.VaultItemId, vi.Title, vi.VaultItemTypeId, vi.EncryptedData, vi.IV,
                        vi.CreatedAt, vi.UpdatedAt, vi.VaultId,
                        v.Name AS VaultName, v.CreatedAt AS VaultCreatedAt, v.UserId AS VaultUserId
                 FROM VaultItems vi
                 INNER JOIN Vaults v ON vi.VaultId = v.VaultId
                 WHERE v.UserId = @UserId
-                  AND vi.ItemType = @ItemType
+                  AND vi.VaultItemTypeId = @VaultItemTypeId
                   AND (@VaultId IS NULL OR vi.VaultId = @VaultId)
                 ORDER BY vi.CreatedAt DESC
                 """;
 
             await using var cmd = new SqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@UserId", userId);
-            cmd.Parameters.AddWithValue("@ItemType", (int)type);
+            cmd.Parameters.AddWithValue("@VaultItemTypeId", vaultItemTypeId);
             cmd.Parameters.AddWithValue("@VaultId", vaultId.HasValue ? vaultId.Value : DBNull.Value);
 
             await using var reader = await cmd.ExecuteReaderAsync();
@@ -75,7 +75,7 @@ namespace Authentica.DAL.Repositories
             await conn.OpenAsync();
 
             const string sql = """
-                SELECT vi.VaultItemId, vi.Title, vi.ItemType, vi.EncryptedData, vi.IV,
+                SELECT vi.VaultItemId, vi.Title, vi.VaultItemTypeId, vi.EncryptedData, vi.IV,
                        vi.CreatedAt, vi.UpdatedAt, vi.VaultId,
                        v.Name AS VaultName, v.CreatedAt AS VaultCreatedAt, v.UserId AS VaultUserId
                 FROM VaultItems vi
@@ -97,14 +97,14 @@ namespace Authentica.DAL.Repositories
             await conn.OpenAsync();
 
             const string sql = """
-                INSERT INTO VaultItems (Title, ItemType, EncryptedData, IV, CreatedAt, UpdatedAt, VaultId)
+                INSERT INTO VaultItems (Title, VaultItemTypeId, EncryptedData, IV, CreatedAt, UpdatedAt, VaultId)
                 OUTPUT INSERTED.VaultItemId
-                VALUES (@Title, @ItemType, @EncryptedData, @IV, @CreatedAt, @UpdatedAt, @VaultId)
+                VALUES (@Title, @VaultItemTypeId, @EncryptedData, @IV, @CreatedAt, @UpdatedAt, @VaultId)
                 """;
 
             await using var cmd = new SqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@Title", item.Title);
-            cmd.Parameters.AddWithValue("@ItemType", (int)item.ItemType);
+            cmd.Parameters.AddWithValue("@VaultItemTypeId", item.VaultItemTypeId);
             cmd.Parameters.AddWithValue("@EncryptedData", item.EncryptedData);
             cmd.Parameters.AddWithValue("@IV", item.IV);
             cmd.Parameters.AddWithValue("@CreatedAt", item.CreatedAt);
@@ -166,7 +166,7 @@ namespace Authentica.DAL.Repositories
         {
             VaultItemId   = reader.GetInt32(reader.GetOrdinal("VaultItemId")),
             Title         = reader.GetString(reader.GetOrdinal("Title")),
-            ItemType      = (VaultItemType)reader.GetInt32(reader.GetOrdinal("ItemType")),
+            VaultItemTypeId = reader.GetInt32(reader.GetOrdinal("VaultItemTypeId")),
             EncryptedData = reader.GetString(reader.GetOrdinal("EncryptedData")),
             IV            = reader.GetString(reader.GetOrdinal("IV")),
             CreatedAt     = reader.GetDateTime(reader.GetOrdinal("CreatedAt")),

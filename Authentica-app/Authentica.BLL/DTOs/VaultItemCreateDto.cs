@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Authentica.BLL.Models;
 
 namespace Authentica.BLL.DTOs
 {
@@ -8,7 +7,7 @@ namespace Authentica.BLL.DTOs
         [Required]
         [StringLength(255)]
         public string Title { get; set; } = string.Empty;
-        public VaultItemType ItemType { get; set; }
+        public int VaultItemTypeId { get; set; }
         public Dictionary<string, string> Fields { get; set; } = new();
     }
 }

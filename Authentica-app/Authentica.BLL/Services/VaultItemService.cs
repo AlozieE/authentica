@@ -19,8 +19,8 @@ namespace Authentica.BLL.Services
         public async Task<List<VaultItem>> GetItems(int vaultId)
             => await _vaultItemRepository.GetByVault(vaultId);
 
-        public async Task<List<VaultItem>> GetItems(string userId, VaultItemType type, int? vaultId = null)
-            => await _vaultItemRepository.GetByUserAndType(userId, type, vaultId);
+        public async Task<List<VaultItem>> GetItems(string userId, int vaultItemTypeId, int? vaultId = null)
+            => await _vaultItemRepository.GetByUserAndType(userId, vaultItemTypeId, vaultId);
 
         public async Task<VaultItem?> GetById(int id)
             => await _vaultItemRepository.GetById(id);
@@ -30,7 +30,7 @@ namespace Authentica.BLL.Services
             var item = new VaultItem
             {
                 Title = dto.Title,
-                ItemType = dto.ItemType,
+                VaultItemTypeId = dto.VaultItemTypeId,
                 VaultId = vaultId,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow

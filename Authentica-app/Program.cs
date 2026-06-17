@@ -59,6 +59,7 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
 // Koppel interfaces aan implementaties via dependency injection.
 builder.Services.AddScoped<IVaultRepository, VaultRepository>();
 builder.Services.AddScoped<IVaultItemRepository, VaultItemRepository>();
+builder.Services.AddScoped<IVaultItemTypeRepository, VaultItemTypeRepository>();
 builder.Services.AddScoped<ITwoFactorRepository, TwoFactorRepository>();
 builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 builder.Services.AddScoped<IPasswordGeneratorService, PasswordGeneratorService>();

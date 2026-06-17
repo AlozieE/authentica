@@ -7,7 +7,7 @@
     </div>
     @if (ViewBag.VaultId != null)
     {
-        <a asp-action="Create" asp-route-vaultId="@ViewBag.VaultId" asp-route-type="@ViewBag.ItemType" class="btn btn-primary">+ Nieuw item</a>
+        <a asp-action="Create" asp-route-vaultId="@ViewBag.VaultId" asp-route-vaultItemTypeId="@ViewBag.ItemType" class="btn btn-primary">+ Nieuw item</a>
     }
     else
     {

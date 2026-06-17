@@ -28,22 +28,22 @@ namespace Authentica_app.Controllers
         }
 
         // Toont een overzicht van alle vault items van het opgegeven type.
-        public async Task<IActionResult> Index(VaultItemType type, int? vaultId = null)
+        public async Task<IActionResult> Index(int vaultItemTypeId, int? vaultId = null)
         {
             // Haal alleen items op die aan de ingelogde user horen.
             var userId = _userManager.GetUserId(User)!;
 
             // Als vaultId is meegegeven worden alleen items uit die specifieke vault getoond.
-            var items = await _vaultItemService.GetItems(userId, type, vaultId);
+            var items = await _vaultItemService.GetItems(userId, vaultItemTypeId, vaultId);
 
             // Geef het type en de vault id mee aan de view voor filtering en weergave.
-            ViewBag.ItemType = type;
+            ViewBag.ItemType = vaultItemTypeId;
             ViewBag.VaultId = vaultId;
             return View(items);
         }
 
         // Toont het formulier voor het aanmaken van een nieuw vault item van het opgegeven type.
-        public async Task<IActionResult> Create(int vaultId, VaultItemType type)
+        public async Task<IActionResult> Create(int vaultId, int vaultItemTypeId)
         {
             // Haal de ingelogde user op om eigenaarschap van de vault te controleren.
             var userId = _userManager.GetUserId(User)!;
@@ -55,14 +55,14 @@ namespace Authentica_app.Controllers
 
             // Geef de vault en het itemtype mee aan de view zodat het formulier correct wordt opgebouwd.
             ViewBag.Vault = vault;
-            ViewBag.ItemType = type;
+            ViewBag.ItemType = vaultItemTypeId;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         // Verwerkt het ingediende formulier en slaat het nieuwe vault item versleuteld op.
-        public async Task<IActionResult> Create(int vaultId, VaultItemType type, VaultItemCreateDto dto, IFormCollection form)
+        public async Task<IActionResult> Create(int vaultId, int vaultItemTypeId, VaultItemCreateDto dto, IFormCollection form)
         {
             // Controleer opnieuw of de vault bestaat en hoort bij de huidige user.
             var userId = _userManager.GetUserId(User)!;
@@ -75,13 +75,13 @@ namespace Authentica_app.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.Vault = vault;
-                ViewBag.ItemType = type;
+                ViewBag.ItemType = vaultItemTypeId;
                 return View();
             }
 
             try
             {
-                dto.ItemType = type;
+                dto.VaultItemTypeId = vaultItemTypeId;
 
                 // Verwerk alle formuliervelden als dynamische gegevens, behalve het CSRF token.
                 foreach (var key in form.Keys)
@@ -92,14 +92,14 @@ namespace Authentica_app.Controllers
 
                 // Sla het item op via de service, die de veldwaarden encrypt voor opslag.
                 await _vaultItemService.CreateItem(vaultId, userId, dto);
-                return RedirectToAction(nameof(Index), new { type });
+                return RedirectToAction(nameof(Index), new { vaultItemTypeId });
             }
             catch (Exception)
             {
                 // Toon een foutmelding als het aanmaken mislukt door een onverwachte fout.
                 ModelState.AddModelError("", "Er is iets misgegaan bij het aanmaken van het item.");
                 ViewBag.Vault = vault;
-                ViewBag.ItemType = type;
+                ViewBag.ItemType = vaultItemTypeId;
                 return View();
             }
         }
@@ -117,7 +117,7 @@ namespace Authentica_app.Controllers
 
             // decrypt de veldwaarden zodat het formulier leesbaar wordt.
             ViewBag.Data = _vaultItemService.DecryptItemData(item);
-            ViewBag.ItemType = item.ItemType;
+            ViewBag.ItemType = item.VaultItemTypeId;
             ViewBag.Vault = item.Vault;
             return View(item);
         }
@@ -138,7 +138,7 @@ namespace Authentica_app.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.Data = _vaultItemService.DecryptItemData(item);
-                ViewBag.ItemType = item.ItemType;
+                ViewBag.ItemType = item.VaultItemTypeId;
                 ViewBag.Vault = item.Vault;
                 return View(item);
             }
@@ -156,14 +156,14 @@ namespace Authentica_app.Controllers
                 // Werk de titel bij via het DTO en sla alle veldwaarden versleuteld op via de service.
                 item.Title = dto.Title;
                 await _vaultItemService.UpdateItem(item, data);
-                return RedirectToAction(nameof(Index), new { type = item.ItemType });
+                return RedirectToAction(nameof(Index), new { vaultItemTypeId = item.VaultItemTypeId });
             }
             catch (Exception)
             {
                 // Toon een foutmelding als het bijwerken mislukt door een onverwachte fout.
                 ModelState.AddModelError("", "Er is iets misgegaan bij het bijwerken van het item.");
                 ViewBag.Data = _vaultItemService.DecryptItemData(item);
-                ViewBag.ItemType = item.ItemType;
+                ViewBag.ItemType = item.VaultItemTypeId;
                 ViewBag.Vault = item.Vault;
                 return View(item);
             }
@@ -184,12 +184,12 @@ namespace Authentica_app.Controllers
             var data = _vaultItemService.DecryptItemData(item);
 
             // Selecteer het relevante veld op basis van het itemtype (wachtwoord, creditcard of notitie).
-            var value = item.ItemType switch
+            var value = item.VaultItemTypeId switch
             {
-                VaultItemType.Password   => data.GetValueOrDefault("Password"),
-                VaultItemType.CreditCard => data.GetValueOrDefault("CardNumber"),
-                VaultItemType.SecureNote => data.GetValueOrDefault("Content"),
-                _                        => null
+                1 => data.GetValueOrDefault("Password"),
+                2 => data.GetValueOrDefault("CardNumber"),
+                3 => data.GetValueOrDefault("Content"),
+                _ => null
             };
 
             return Json(new { value });
@@ -221,15 +221,15 @@ namespace Authentica_app.Controllers
             try
             {
                 // Sla het itemtype op vóór verwijdering, zodat we daarna correct kunnen omleiden.
-                var type = item.ItemType;
+                var vaultItemTypeId = item.VaultItemTypeId;
                 await _vaultItemService.DeleteItem(item);
-                return RedirectToAction(nameof(Index), new { type });
+                return RedirectToAction(nameof(Index), new { vaultItemTypeId });
             }
             catch (Exception)
             {
                 // Bij een fout sturen we de user terug naar de overzichtspagina zonder foutmelding,
                 // omdat er geen formulier is om een ModelState-fout op te tonen.
-                return RedirectToAction(nameof(Index), new { type = item.ItemType });
+                return RedirectToAction(nameof(Index), new { vaultItemTypeId = item.VaultItemTypeId });
             }
         }
     }
