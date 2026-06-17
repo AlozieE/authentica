@@ -223,9 +223,9 @@
 
             <div class="nav-section-label">Vault</div>
             <a asp-controller="Vault" asp-action="Index">All Vaults</a>
-            <a asp-controller="VaultItem" asp-action="Index" asp-route-type="Password" class="sub-link">Passwords</a>
-            <a asp-controller="VaultItem" asp-action="Index" asp-route-type="CreditCard" class="sub-link">Credit Cards</a>
-            <a asp-controller="VaultItem" asp-action="Index" asp-route-type="SecureNote" class="sub-link">Secure Notes</a>
+            <a asp-controller="VaultItem" asp-action="Index" asp-route-vaultItemTypeId="1" class="sub-link">Passwords</a>
+            <a asp-controller="VaultItem" asp-action="Index" asp-route-vaultItemTypeId="2" class="sub-link">Credit Cards</a>
+            <a asp-controller="VaultItem" asp-action="Index" asp-route-vaultItemTypeId="3" class="sub-link">Secure Notes</a>
         </nav>
 
         <div class="sidebar-bottom">
