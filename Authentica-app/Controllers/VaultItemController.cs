@@ -38,6 +38,13 @@ namespace Authentica_app.Controllers
 
             // Geef het type en de vault id mee aan de view voor filtering en weergave.
             ViewBag.ItemType = vaultItemTypeId;
+            ViewBag.ItemTypeName = vaultItemTypeId switch
+            {
+                1 => "Wachtwoorden",
+                2 => "Creditcards",
+                3 => "Beveiligde notities",
+                _ => "Items"
+            };
             ViewBag.VaultId = vaultId;
             return View(items);
         }
