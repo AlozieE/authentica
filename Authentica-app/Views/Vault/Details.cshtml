@@ -17,13 +17,13 @@
                 <span class="fw-semibold">🔑 Wachtwoorden</span>
                 <a asp-controller="VaultItem" asp-action="Create"
                    asp-route-vaultId="@Model.VaultId"
-                   asp-route-type="Password"
+                   asp-route-vaultItemTypeId="1"
                    class="btn btn-sm btn-primary">+ Toevoegen</a>
             </div>
             <div class="card-body">
                 <a asp-controller="VaultItem" asp-action="Index"
                    asp-route-vaultId="@Model.VaultId"
-                   asp-route-type="Password"
+                   asp-route-vaultItemTypeId="1"
                    class="btn btn-sm btn-outline-secondary w-100">Bekijk alle wachtwoorden</a>
             </div>
         </div>
@@ -35,13 +35,13 @@
                 <span class="fw-semibold">💳 Creditcards</span>
                 <a asp-controller="VaultItem" asp-action="Create"
                    asp-route-vaultId="@Model.VaultId"
-                   asp-route-type="CreditCard"
+                   asp-route-vaultItemTypeId="2"
                    class="btn btn-sm btn-primary">+ Toevoegen</a>
             </div>
             <div class="card-body">
                 <a asp-controller="VaultItem" asp-action="Index"
                    asp-route-vaultId="@Model.VaultId"
-                   asp-route-type="CreditCard"
+                   asp-route-vaultItemTypeId="2"
                    class="btn btn-sm btn-outline-secondary w-100">Bekijk alle creditcards</a>
             </div>
         </div>
@@ -53,13 +53,13 @@
                 <span class="fw-semibold">📝 Beveiligde notities</span>
                 <a asp-controller="VaultItem" asp-action="Create"
                    asp-route-vaultId="@Model.VaultId"
-                   asp-route-type="SecureNote"
+                   asp-route-vaultItemTypeId="3"
                    class="btn btn-sm btn-primary">+ Toevoegen</a>
             </div>
             <div class="card-body">
                 <a asp-controller="VaultItem" asp-action="Index"
                    asp-route-vaultId="@Model.VaultId"
-                   asp-route-type="SecureNote"
+                   asp-route-vaultItemTypeId="3"
                    class="btn btn-sm btn-outline-secondary w-100">Bekijk alle notities</a>
             </div>
         </div>
