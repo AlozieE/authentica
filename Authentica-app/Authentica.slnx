@@ -2,4 +2,5 @@
   <Project Path="Authentica-app.csproj" />
   <Project Path="Authentica.BLL/Authentica.BLL.csproj" />
   <Project Path="Authentica.DAL/Authentica.DAL.csproj" />
+  <Project Path="Authentica-app.Tests/Authentica-app.Tests.csproj" />
 </Solution>
