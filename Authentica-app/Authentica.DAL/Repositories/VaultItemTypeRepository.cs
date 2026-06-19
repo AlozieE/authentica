@@ -16,38 +16,52 @@ namespace Authentica.DAL.Repositories
 
         public IEnumerable<VaultItemType> GetAll()
         {
-            var types = new List<VaultItemType>();
+            try
+            {
+                var types = new List<VaultItemType>();
 
-            using var conn = _db.CreateConnection();
-            conn.Open();
+                using var conn = _db.CreateConnection();
+                conn.Open();
 
-            const string sql = "SELECT VaultItemTypeId, Name FROM VaultItemType";
+                const string sql = "SELECT VaultItemTypeId, Name FROM VaultItemType";
 
-            using var cmd = new SqlCommand(sql, conn);
-            using var reader = cmd.ExecuteReader();
+                using var cmd = new SqlCommand(sql, conn);
+                using var reader = cmd.ExecuteReader();
 
-            while (reader.Read())
-                types.Add(MapVaultItemType(reader));
+                while (reader.Read())
+                    types.Add(MapVaultItemType(reader));
 
-            return types;
+                return types;
+            }
+            catch (SqlException ex)
+            {
+                throw new InvalidOperationException("Fout bij het ophalen van vault item types.", ex);
+            }
         }
 
         public VaultItemType GetById(int id)
         {
-            using var conn = _db.CreateConnection();
-            conn.Open();
+            try
+            {
+                using var conn = _db.CreateConnection();
+                conn.Open();
 
-            const string sql = "SELECT VaultItemTypeId, Name FROM VaultItemType WHERE VaultItemTypeId = @Id";
+                const string sql = "SELECT VaultItemTypeId, Name FROM VaultItemType WHERE VaultItemTypeId = @Id";
 
-            using var cmd = new SqlCommand(sql, conn);
-            cmd.Parameters.AddWithValue("@Id", id);
+                using var cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@Id", id);
 
-            using var reader = cmd.ExecuteReader();
+                using var reader = cmd.ExecuteReader();
 
-            if (!reader.Read())
-                throw new Exception($"VaultItemType with id {id} not found.");
+                if (!reader.Read())
+                    throw new InvalidOperationException($"VaultItemType met id {id} niet gevonden.");
 
-            return MapVaultItemType(reader);
+                return MapVaultItemType(reader);
+            }
+            catch (SqlException ex)
+            {
+                throw new InvalidOperationException($"Fout bij het ophalen van vault item type met id {id}.", ex);
+            }
         }
 
         private static VaultItemType MapVaultItemType(SqlDataReader reader) => new()
