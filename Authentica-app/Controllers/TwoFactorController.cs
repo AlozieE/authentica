@@ -60,7 +60,7 @@ namespace Authentica_app.Controllers
             // Toon het formulier opnieuw met een foutmelding als de verificatiecode onjuist is.
             if (!_twoFactorService.ValidateCodeWithSecret(secret, code))
             {
-                ModelState.AddModelError(nameof(code), "Invalid verification code. Please try again.");
+                ModelState.AddModelError(nameof(code), "Foute verificatiecode. Controleer de code in je authenticator-app en probeer het opnieuw.");
                 ViewBag.Secret = secret;
                 ViewBag.QrUri  = _twoFactorService.GetSetupUri(user!.Email!, secret);
                 return View();
@@ -73,7 +73,7 @@ namespace Authentica_app.Controllers
                 user.TwoFactorEnabled = true;
                 await _userManager.UpdateAsync(user);
 
-                TempData["SuccessMessage"] = "Two-factor authentication is now enabled.";
+                TempData["SuccessMessage"] = "Two-factor authenticatie is succesvol ingeschakeld.";
                 return RedirectToAction(nameof(Manage));
             }
             catch (Exception)
@@ -98,7 +98,7 @@ namespace Authentica_app.Controllers
                 await _userManager.UpdateAsync(user);
                 await _twoFactorService.ClearSecretAsync(user.Id);
 
-                TempData["SuccessMessage"] = "Two-factor authentication has been disabled.";
+                TempData["SuccessMessage"] = "Two-factor authenticatie is succesvol uitgeschakeld.";
                 return RedirectToAction(nameof(Manage));
             }
             catch (Exception)

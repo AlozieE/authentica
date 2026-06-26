@@ -86,6 +86,14 @@ namespace Authentica_app.Controllers
                 return View();
             }
 
+            if (vaultItemTypeId == 1 && form["Password"].ToString().Length < 8)
+            {
+                ModelState.AddModelError("Password", "Het wachtwoord moet minimaal 8 tekens bevatten.");
+                ViewBag.Vault = vault;
+                ViewBag.ItemType = vaultItemTypeId;
+                return View();
+            }
+
             try
             {
                 dto.VaultItemTypeId = vaultItemTypeId;
@@ -150,6 +158,15 @@ namespace Authentica_app.Controllers
                 return View(item);
             }
 
+            if (item.VaultItemTypeId == 1 && form["Password"].ToString().Length < 8)
+            {
+                ModelState.AddModelError("Password", "Het wachtwoord moet minimaal 8 tekens bevatten.");
+                ViewBag.Data = _vaultItemService.DecryptItemData(item);
+                ViewBag.ItemType = item.VaultItemTypeId;
+                ViewBag.Vault = item.Vault;
+                return View(item);
+            }
+
             try
             {
                 // Verzamel alle formuliervelden als de nieuwe veldwaarden, exclusief het CSRF-token.
@@ -207,7 +224,7 @@ namespace Authentica_app.Controllers
         {
             if (length < 8 || length > 128)
                 return BadRequest(new { error = "Length must be between 8 and 128." });
-
+        
             var password = _passwordGenerator.Generate(length);
             return Json(new { password });
         }

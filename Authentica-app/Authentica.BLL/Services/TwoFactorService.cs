@@ -41,7 +41,7 @@ namespace Authentica.BLL.Services
 
         // Haalt het versleutelde secret op, ontsleutelt het en valideert de ingevoerde code.
         public async Task<bool> ValidateCodeAsync(string userId, string code)
-        {
+        { 
             var (encSecret, iv) = await _repository.GetSecretAsync(userId);
             if (encSecret is null || iv is null)
                 return false;
